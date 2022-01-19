@@ -1,0 +1,13 @@
+#!/bin/bash
+
+x=0
+i=0
+
+while [ x != 1 ]
+do
+  (( i++ ))
+  echo $i
+  x=$(python3 integrate_all.py)
+  docker system prune -af
+done
+echo Jtz alles feddisch
