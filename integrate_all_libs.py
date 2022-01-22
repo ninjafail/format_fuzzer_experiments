@@ -1,13 +1,4 @@
 current_libs = { 
-	'javaparser': (['javaparser'], '2022-01-12T22:34:11+00:00'),
-	'gstreamer': (['gstreamer'], '2022-01-12T22:34:11+00:00'),
-	'kubernetes': (['kubernetes'], '2022-01-12T22:34:11+00:00'),
-	'lzo': (['lzo_decompress_target', 'all_lzo_compress', 'lzo_compress_target'], '2022-01-12T22:34:11+00:00'),
-	'openthread': (['openthread'], '2022-01-12T22:34:11+00:00'),
-	'postgresql': (['postgresql'], '2022-01-12T22:34:11+00:00'),
-	'bazel-rules-fuzzing-test-java': (['bazel-rules-fuzzing-test-java'], '2022-01-12T22:34:11+00:00'),
-	'c-blosc2': (['c-blosc2'], '2022-01-12T22:34:11+00:00'),
-	'racket': (['racket'], '2022-01-12T22:34:11+00:00'),
 	'expat': (['expat'], '2022-01-12T22:34:11+00:00'),
 	'cpp-httplib': (['cpp-httplib'], '2022-01-12T22:34:11+00:00'),
 	'libvpx': (['libvpx'], '2022-01-12T22:34:11+00:00'),
