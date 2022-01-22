@@ -7,7 +7,7 @@ while [ x != 1 ]
 do
   (( i++ ))
   echo $i
-  x=$(python3 integrate_all.py)
+  x=$(python3 integrate_all_refactor.py)
   docker system prune -af
 done
 echo Jtz alles feddisch

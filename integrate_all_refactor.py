@@ -221,21 +221,23 @@ def main() -> int:
                 exception_list.append(experiment_name)
 
             # every x-th run prune the system
-            if n % 25 == 0:
-                p1 = run('docker system prune -f')
-                log(str(p1.stdout.decode()))
-                system_pruned = True
+            # if n % 25 == 0:
+            #     p1 = run('docker system prune -f')
+            #     log(str(p1.stdout.decode()))
+            #     system_pruned = True
 
-            if n > 30:
-                return 1
+            if n > 20:
+                break
+        if n > 20:
+            break
 
         # pop the experiment from the list and save all libraries still to do (in case of crash)
         oss_libraries.pop(project)
         save_leftover_libs(oss_libraries)
 
     log("------------------------------------------ Finished ------------------------------------------")
-    log("Exception list: {}".format(exception_list))
-    log("Timeout list: {}".format(timeout_list))
+    log(f"Exception list: {exception_list}")
+    log(f"Timeout list: {timeout_list}")
     return 0
 
 """
@@ -268,7 +270,5 @@ def main():
 
 if __name__ == "__main__":
     print("Starting the experiment ...")
-    x = 0
-    while x == 0:
-        x = main()
+    x = main()
     exit(x)
