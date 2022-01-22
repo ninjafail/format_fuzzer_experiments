@@ -1,0 +1,4 @@
+#!/bin/bash
+
+source ../fuzzbench/.venv/bin/activate
+python3 integrate_all_refactor.py
