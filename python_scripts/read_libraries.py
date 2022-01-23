@@ -1,7 +1,7 @@
 import os
 
 
-OSS_FUZZ_BENCHMARKS_PATH = '/home/florian/uni/cysec_project/fuzzbench/third_party/oss-fuzz/projects'
+OSS_FUZZ_BENCHMARKS_PATH = '/home/forian/uni/fuzzbench/third_party/oss-fuzz/projects'
 
 
 def read_libraries():
