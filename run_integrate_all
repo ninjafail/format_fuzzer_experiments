@@ -8,6 +8,7 @@ do
   (( i++ ))
   echo "$i"
   x=$(python3 integrate_all_refactor.py)
+  echo "$x"
   docker system prune -af
   if [ $((i%3)) = 0 ]; then
     sudo -s

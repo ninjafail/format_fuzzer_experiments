@@ -10,7 +10,7 @@ import copy
 import os
 import subprocess
 from typing import IO
-import integrate_all_libs as ld
+import integrate_all_libs
 
 
 RUN_NAME = "test_run_3"
@@ -18,7 +18,7 @@ SAVE_DIRECTORY = f"/home/forian/uni/{RUN_NAME}"
 FUZZBENCH_DIRECTORY = "/home/forian/uni/fuzzbench"
 TEST_RUN_TIMEOUT = 300              # the time a single experiment has building
 DEBUG = True                        # checks whether the logged errors should be printed aswell
-OSS_LIBRARIES = ld.current_libs     # OSS_LIBRARIES to run
+OSS_LIBRARIES = integrate_all_libs.current_libs     # OSS_LIBRARIES to run
 
 """
 Stuff I've learned in the first script:
@@ -226,14 +226,11 @@ def main() -> int:
             #     log(str(p1.stdout.decode()))
             #     system_pruned = True
 
-            if n > 20:
-                break
-        if n > 20:
-            break
-
         # pop the experiment from the list and save all libraries still to do (in case of crash)
         oss_libraries.pop(project)
         save_leftover_libs(oss_libraries)
+        if n > 20:
+            break
 
     log("------------------------------------------ Finished ------------------------------------------")
     log(f"Exception list: {exception_list}")
