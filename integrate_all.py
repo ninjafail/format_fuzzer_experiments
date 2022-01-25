@@ -7,9 +7,10 @@ import typing
 from typing import Tuple
 
 import integrate_all_libs as ld
+# the old and buggy integration script
 
-
-pwd = 'werdasliestkannhacken'
+# change to your user password
+pwd = 'werdasliestkannhacken'   # not my actual password
 
 RUN_NAME = "test_run_3"
 SAVE_DIRECTORY = "/home/florian/uni/{}".format(RUN_NAME)

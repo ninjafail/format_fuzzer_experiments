@@ -2,7 +2,7 @@ import subprocess
 
 project = 'lzo'
 fuzz_target = 'all_lzo_compress'
-pwd = 'werdasliestkannhacken'
+pwd = 'werdasliestkannhacken'   # not my actual password
 
 
 c = 0
