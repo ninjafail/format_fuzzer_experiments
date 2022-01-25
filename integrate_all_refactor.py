@@ -229,7 +229,7 @@ def main() -> int:
         # pop the experiment from the list and save all libraries still to do (in case of crash)
         oss_libraries.pop(project)
         save_leftover_libs(oss_libraries)
-        if n > 20:
+        if n > 30:
             break
 
     log("------------------------------------------ Finished ------------------------------------------")
@@ -237,33 +237,6 @@ def main() -> int:
     log(f"Timeout list: {timeout_list}")
     return 0
 
-"""
-def main():
-    c=0
-    for project, (fuzz_target_list, date) in OSS_LIBRARIES.items():
-        for fuzz_target in fuzz_target_list:
-            c+=1
-            try:
-                cmd = f"PYTHONPATH=. .venv/bin/python3 benchmarks/oss_fuzz_benchmark_integration.py -p {project} -f {fuzz_target} -d {date} -c master"
-                cmd2 = f"PYTHONPATH=. python3 benchmarks/oss_fuzz_benchmark_integration.py " \
-                            f"-p {project} " \
-                            f"-f {fuzz_target} " \
-                            f"-d {date} " \
-                            f"-c master && " \
-                       f"make test-run-afl-{project}_{fuzz_target}"
-                p = run(cmd2)
-                if p:
-                    if p.stdout:
-                        print(p.stdout.decode())
-                    if p.stderr:
-                        print(p.stderr.decode())
-                else:
-                    print("error")
-            except Exception as e:
-                print(e)
-            if c > 5:
-                return 0
-"""
 
 if __name__ == "__main__":
     print("Starting the experiment ...")
