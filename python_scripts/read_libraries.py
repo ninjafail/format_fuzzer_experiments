@@ -4,7 +4,13 @@ import os
 OSS_FUZZ_BENCHMARKS_PATH = '/home/forian/uni/fuzzbench/third_party/oss-fuzz/projects'
 
 
-def read_libraries():
+def read_libraries(commit_hash: str = 'master') -> dict:
+    """Reads the OSS_FUZZ libraries, that have a fuzz target specified. This might be buggy, use read_libraries_all.
+
+    :param commit_hash: The commit hash, from which commit you want the experiments. (default=master)
+    :return: A dictionary containing all projects, that have a fuzz_target specified. The format is:
+    <project>: (<list_of_fuzz_targets>, <date>)
+    """
     libs = [d for d in os.listdir(OSS_FUZZ_BENCHMARKS_PATH) if
             not os.path.isfile(os.path.join(OSS_FUZZ_BENCHMARKS_PATH, d))]
     # the benchmarks with fuzztarget can be compared
@@ -52,14 +58,21 @@ def read_libraries():
     # getting the date
     for d, fuzz_target in experiments.items():
         os.chdir(os.path.join(OSS_FUZZ_BENCHMARKS_PATH, d))
-        stream = os.popen('git --no-pager log -1 master --format=%cd --date=iso-strict')
+        stream = os.popen(f'git --no-pager log -1 {commit_hash} --format=%cd --date=iso-strict')
         output = stream.read()
+        stream.close()
         experiments[d] = (fuzz_target, output.replace("\n", ""))
 
     return experiments
 
 
-def read_all_libraries():
+def read_all_libraries(commit_hash: str = 'master') -> dict:
+    """Reads all OSS-Fuzz projects and returns them with fuzz targen and commit date
+
+    :param commit_hash: The commit hash, from which commit you want the experiments. (default=master)
+    :return: A dictionary containing all projects, that have a fuzz_target specified. The format is:
+    <project>: (<list_of_fuzz_targets>, <date>)
+    """
     libs = [d for d in os.listdir(OSS_FUZZ_BENCHMARKS_PATH) if
             not os.path.isfile(os.path.join(OSS_FUZZ_BENCHMARKS_PATH, d))]
     # the benchmarks with fuzztarget can be compared
@@ -87,7 +100,7 @@ def read_all_libraries():
 
         # get the git date
         os.chdir(os.path.join(OSS_FUZZ_BENCHMARKS_PATH, d))
-        stream = os.popen('git --no-pager log -1 master --format=%cd --date=iso-strict')
+        stream = os.popen(f'git --no-pager log -1 {commit_hash} --format=%cd --date=iso-strict')
         output = stream.read()
         experiments[d] = (fuzz_targets, output.replace('\n', ''))
 
@@ -97,11 +110,15 @@ def read_all_libraries():
 
 
 def main():
-    experiments = read_all_libraries()
-    for k,v in experiments.items():
-        print(f"'{k}': {v},")
-    with open("all_libs.py", "a") as f:
-        f.writelines(str(experiments))
+    # c34c308faad86d154b52586ff66de8d77187cafd: Commits on Jan 28, 2022 Submit Arrow-Java for inclusion (#7171)
+    experiments = read_all_libraries('c34c308faad86d154b52586ff66de8d77187cafd')
+
+    with open("/home/forian/uni/format_fuzzer_experiments/python_scripts/all_libs_2022-01-28.py", "a") as f:
+        f.write("all_libs = {\n")
+        for k, v in experiments.items():
+            print(f"'{k}': {v},")
+            f.write(f"\t'{k}': {v},\n")
+        f.write('}')
 
 
 main()
