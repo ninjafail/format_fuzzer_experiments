@@ -118,7 +118,7 @@ def main():
         for k, v in experiments.items():
             print(f"'{k}': {v},")
             f.write(f"\t'{k}': {v},\n")
-        f.write('}')
+        f.write('}\n')
 
 
 main()
