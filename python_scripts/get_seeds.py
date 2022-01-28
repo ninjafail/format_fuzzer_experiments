@@ -1,75 +1,130 @@
 import subprocess
 import os
-
-LIB_PATH = "/home/florian/uni/test_run_3"
-
-
-def write_to_file(filename, lib_name, fuzz_target, date, file_types):
-    with open(f'../{filename}', 'a') as f:
-        f.write(f"'{lib_name}': ('{fuzz_target}', '{date}')\n")
-        for ft in file_types:
-            f.write(f'{ft}')
-        f.write('\n\n')
+import itertools
 
 
-def write_to_file_list(filename, lib_name, fuzz_target, date):
-    with open(f'../{filename}', 'a') as f:
-        f.write(f"'{lib_name}': ('{fuzz_target}', '{date}'),\n")
+LIB_PATH = "/home/forian/uni/test_run_4"
+fail = {}
+DEBUG = True
+
+
+def debug_print(x):
+    if DEBUG:
+        print(x, end='')
+
+
+def insert_into_fail_dict(lib_name: str, fuzz_target: str, date: str):
+    x = fail.get(lib_name)
+    if x:
+        ft = x[0]
+        ft.append(fuzz_target)
+        fail[lib_name] = (ft, date)
+    else:
+        fail[lib_name] = ([fuzz_target], date)
 
 
 def main():
     libs = [d for d in os.listdir(LIB_PATH) if not os.path.isfile(os.path.join(LIB_PATH, d))]
     c = 0
-    ascii, fail, others = [], [], []
+    ascii, others = [], []
 
+    print("Searching all seeds in the out directories ... ", end='')
     for lib in libs:
         lib_name = lib[0:lib.find('__')]
         fuzz_target = lib[lib.find('__')+2:lib.rfind('__')]
         date = lib[lib.rfind('__')+2:]
+        debug_print(f'{lib_name}: ({fuzz_target}, {date})\n')
 
         out_path = os.path.join(LIB_PATH, lib, "out")
 
+        # if out_dir does not exist -> fail (should always exist)
         if not os.path.exists(out_path):
-            fail.append(f"'{lib_name}': ('{fuzz_target}', '{date}'),\n")
+            insert_into_fail_dict(lib_name, fuzz_target, date)
             continue
 
+        # get all directories inside of out
         outs = [d for d in os.listdir(out_path) if not os.path.isfile(os.path.join(out_path, d))]
+        # if empty -> fail
         if not outs:
-            fail.append(f"'{lib_name}': ('{fuzz_target}', '{date}'),\n")
-        print(f'{lib_name}: ({fuzz_target}, {date})')
+            insert_into_fail_dict(lib_name, fuzz_target, date)
+            continue
+
+        # for every out directory, that contains something
         for o in outs:
+            # get all seed files
             seed_path = os.path.join(out_path, o, 'seeds')
             if os.path.isdir(seed_path):
                 seeds = [seed for seed in os.listdir(seed_path) if os.path.isfile(os.path.join(seed_path, seed))]
-                file_types = ["", ]
+                file_types = []
+                # for every seed file get the output of the file command
                 for seed in seeds:
                     try:
                         p = subprocess.run(['file',  f"{seed}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=seed_path)
-                        file_types.append(p.stdout.decode())
+                        file_types.append(p.stdout.decode()[42:].replace('\n', ''))  # ignore the hash
                     except Exception as e:
                         print(e)
                 if seeds:
-                    c+=1
+                    c += 1
                     # check if file type is interesting
                     ascii_amount = sum([1 if "ASCII" in ft else 0 for ft in file_types])
+                    # if it's just ascii, append to ascii list otherwise to others
                     if ascii_amount >= len(seeds)-1:
-                        #write_to_file_list('oss-fuzz_ascii', lib_name, fuzz_target, date)
-                        pass
+                        ascii.append((lib_name, fuzz_target, date))
                     else:
-                        write_to_file('oss-fuzz_others', lib_name, fuzz_target, date, file_types)
-                        pass
+                        others.append((lib_name, fuzz_target, date, file_types))
                     continue
-            fail.append(f"'{lib_name}': ('{fuzz_target}', '{date}'),\n")
+            # if neither seed path, nor is a directory or there were no seeds -> fail
+            insert_into_fail_dict(lib_name, fuzz_target, date)
+    print("Done.")
 
-    print("iterated through all libs \n")
-    fail.sort()
+    print("\nIterated through all libs. Writing to files now ... ")
+    print("\tWriting all failed libs ...", end='')
+    should_write_fail = False
     with open('../oss-fuzz_fail', 'a') as f:
-        for i in fail:
-            #f.write(i)
-            print(i)
+        for lib_name, (fuzz_targets, date) in fail.items():
+            x = f"'{lib_name}': ({list(set(fuzz_targets))}, '{date}'), \n"
+            if should_write_fail:
+                f.write(x)
+            debug_print(x)
+    print("Done.")
+
+    print("\tWriting all ascii libs ... ", end='')
+    ascii = list(set(ascii))
+    should_write_ascii = False
+    with open('../oss-fuzz_ascii', 'a') as f:
+        for lib_name, fuzz_target, date in ascii:
+            x = f"'{lib_name}': ('{fuzz_target}', '{date}'), \n"
+            if should_write_ascii:
+                f.write(x)
+            debug_print(x)
+    print("Done.")
+
+    print("\tWriting all others libs ... ", end='')
+    others.sort()
+    others = list(others for others, _ in itertools.groupby(others))
+    should_write = True
+    with open('../oss-fuzz_others', 'a') as f:
+        for lib_name, fuzz_target, date, file_types in others:
+            x = f"'{lib_name}': ('{fuzz_target}', '{date}', [\n"
+            if should_write:
+                f.write(x)
+            debug_print(x)
+            for ft in list(set(file_types)):
+                x = f"\t'{ft}'\n"
+                if should_write:
+                    f.write(x)
+                debug_print(x)
+            if should_write:
+                f.write("]),\n\n")
+            debug_print("]),\n")
+    print("Done.")
+    print("Done.")
 
     print('Amount of libraries: {}'.format(len(libs)))
     print('Amount with seed: {}'.format(c))
+    print(f"Failed libs: {len(fail.items())}")
+    print(f"Ascii libs: {len(ascii)}")
+    print(f"Other libs: {len(others)}")
 
 
 main()
