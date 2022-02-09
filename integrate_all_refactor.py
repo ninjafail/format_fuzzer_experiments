@@ -12,8 +12,8 @@ import subprocess
 from typing import IO
 import integrate_all_libs
 
-
-RUN_NAME = "test_run_3"
+COMMIT_HASH = 'c34c308faad86d154b52586ff66de8d77187cafd'
+RUN_NAME = "test_run_5"
 SAVE_DIRECTORY = f"/home/forian/uni/{RUN_NAME}"
 FUZZBENCH_DIRECTORY = "/home/forian/uni/fuzzbench"
 TEST_RUN_TIMEOUT = 300              # the time a single experiment has building
@@ -98,7 +98,7 @@ def cleanup():
     # p = Popen('echo y | docker builder prune -a')
 
 
-def run_experiment(project: str, fuzz_target: str, date: str, timeout: int) -> bool:
+def run_experiment(project: str, fuzz_target: str, date: str, commit_hash: str, timeout: int) -> bool:
     """Integrates and runs a single oss-fuzz experiment. Uses cleanup() in the end.
 
     :param project: The name of the OSS-fuzz project
@@ -131,7 +131,7 @@ def run_experiment(project: str, fuzz_target: str, date: str, timeout: int) -> b
                    f"-p {project} " \
                    f"-f {fuzz_target} " \
                    f"-d {date} " \
-                   f"-c master && " \
+                   f"-c {commit_hash} && " \
                    f"make test-run-afl-{project}_{fuzz_target}"
             run(cmd, out=out, err=err, timeout=timeout)
         except Exception as e:
@@ -210,10 +210,10 @@ def main() -> int:
 
             # if the system has been pruned give more time, since the base image needs to be reinstalled
             if system_pruned:
-                res = run_experiment(project, fuzz_target, date, 2*TEST_RUN_TIMEOUT)
+                res = run_experiment(project, fuzz_target, date, COMMIT_HASH, 2*TEST_RUN_TIMEOUT)
                 system_pruned = False
             else:
-                res = run_experiment(project, fuzz_target, date, TEST_RUN_TIMEOUT)
+                res = run_experiment(project, fuzz_target, date, COMMIT_HASH, TEST_RUN_TIMEOUT)
 
             if res:
                 timeout_list.append(experiment_name)

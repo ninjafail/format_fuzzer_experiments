@@ -3,17 +3,14 @@
 x=0
 i=0
 
-while [ "$x" != 1 ]
+for ((z=0;z<2;z++))
 do
   (( i++ ))
   echo "$i"
   x=$(python3 integrate_all_refactor.py)
   echo "$x"
-  docker system prune -af
-  if [ $((i%3)) = 0 ]; then
-    systemctl stop docker
-    rm -rf /var/lib/docker
-    systemctl start docker
-  fi
+  systemctl stop docker
+  rm -rf /var/lib/docker
+  systemctl start docker
 done
 echo Jtz alles feddisch
