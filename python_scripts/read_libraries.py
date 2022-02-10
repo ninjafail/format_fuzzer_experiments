@@ -1,4 +1,7 @@
 import os
+import subprocess
+import typing
+import all_libs_commits
 
 
 OSS_FUZZ_BENCHMARKS_PATH = '/home/forian/uni/fuzzbench/third_party/oss-fuzz/projects'
@@ -66,6 +69,25 @@ def read_libraries(commit_hash: str = 'master') -> dict:
     return experiments
 
 
+def get_fuzz_targets(dir_path: os.path) -> typing.List[str]:
+    """Returns all the fuzz targets of an certain oss-fuzz experiment. Returns an empty List, if none were found.
+
+    :param dir_path: The path of the oss-fuzz experiment
+    :return: List of fuzz targets
+    """
+    x = [f for f in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, f))]
+    # get the targets
+    fuzz_targets = []
+    for f in x:
+        if ".cc" in f or \
+           ".cpp" in f or \
+           ".C" in f or \
+           ".c++" in f or \
+           ".c" in f:
+            fuzz_targets.append(f[:f.rindex('.')])
+    return fuzz_targets
+
+
 def read_all_libraries(commit_hash: str = 'master') -> dict:
     """Reads all OSS-Fuzz projects and returns them with fuzz targen and commit date
 
@@ -82,21 +104,11 @@ def read_all_libraries(commit_hash: str = 'master') -> dict:
 
     for d in libs:
         dir_path = os.path.join(OSS_FUZZ_BENCHMARKS_PATH, d)
-        x = [f for f in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, f))]
 
         # get the targets
-        has_target = False
-        fuzz_targets = []
-        for f in x:
-            if ".cc" in f or \
-               ".cpp" in f or \
-               ".C" in f or \
-               ".c++" in f or \
-               ".c" in f:
-                has_target = True
-                fuzz_targets.append(f[:f.rindex('.')])
-        if not has_target:
-            fuzz_targets.append(d)
+        fuzz_targets = get_fuzz_targets(dir_path)
+        if not fuzz_targets:
+            fuzz_targets = [d]
 
         # get the git date
         os.chdir(os.path.join(OSS_FUZZ_BENCHMARKS_PATH, d))
@@ -108,17 +120,57 @@ def read_all_libraries(commit_hash: str = 'master') -> dict:
     return experiments
 
 
+def read_commit_libs():
+    libs = [d for d in os.listdir(OSS_FUZZ_BENCHMARKS_PATH) if
+            not os.path.isfile(os.path.join(OSS_FUZZ_BENCHMARKS_PATH, d))]
+    experiments = dict()
+    c = 0
+    for d in libs:
+        dir_path = os.path.join(OSS_FUZZ_BENCHMARKS_PATH, d)
+        subprocess.run('git checkout master', shell=True, cwd=OSS_FUZZ_BENCHMARKS_PATH, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        p = subprocess.run('git --no-pager log --pretty=format:"%h" -- .', shell=True, cwd=dir_path,
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        commit_hashes = p.stdout.decode().split()
+        commit_hashes = list(set([commit_hashes[i] for i in [0,len(commit_hashes)//2, -1]]))
+
+        res = []
+        for commit_hash in commit_hashes:
+            p = subprocess.run(f'git checkout {commit_hash}', shell=True, cwd=dir_path,
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            fuzz_targets = get_fuzz_targets(dir_path)
+            if not fuzz_targets:
+                fuzz_targets = [d]
+
+            p = subprocess.run(f'git --no-pager log -1 {commit_hash} --format=%cd --date=iso-strict', shell=True,
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=dir_path)
+            date = p.stdout.decode().replace('\n', '')
+            res.append((fuzz_targets, commit_hash, date))
+        experiments[d] = res
+        print(f"\t'{d}': {res},")
+
+    return experiments
+
+
+def remove_ascii(all: dict, fail: dict):
+    for f in fail.keys():
+        if all.get(f): all.pop(f)
+        else: print(f)
+
+    print(all)
 
 def main():
     # c34c308faad86d154b52586ff66de8d77187cafd: Commits on Jan 28, 2022 Submit Arrow-Java for inclusion (#7171)
-    experiments = read_all_libraries('c34c308faad86d154b52586ff66de8d77187cafd')
+    # experiments = read_all_libraries('c34c308faad86d154b52586ff66de8d77187cafd')
+
+    remove_ascii(all_libs_commits.all_libs, all_libs_commits.ascii)
+    experiments = read_commit_libs()
 
     with open("/home/forian/uni/format_fuzzer_experiments/python_scripts/all_libs_2022-01-28.py", "a") as f:
-        f.write("all_libs = {\n")
+        #f.write("all_libs = {\n")
         for k, v in experiments.items():
             print(f"'{k}': {v},")
-            f.write(f"\t'{k}': {v},\n")
-        f.write('}\n')
-
+            #f.write(f"\t'{k}': {v},\n")
+        #f.write('}\n')
 
 main()
