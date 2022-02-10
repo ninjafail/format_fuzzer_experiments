@@ -1,0 +1,433 @@
+Your task here would be to identify appropriate benchmarks and their respective file formats, setup and run fuzzing experiments on those.
+
+Key question: Which ones have a binary template? 
+Goal: to evaluate Format Fuzzer and compare it to afl
+
+TODO: 
+- run a pdf experiment for aflsmartformat + afl on colossus
+- write email at it@cispa.de cc rafael
+- ticket.cispa.de for that I have to redirect my browser to the local network of cispa
+
+- Automation script:
+	. What makes the experiments fail?
+	-> one permissions
+	. What about the experiments that don't have a fuzz_target specified?
+	-> actually runnable with library itself as a target
+	. What about the seeds that have some values prepended or appended?
+	. New templates from https://formats.kaitai.io
+
+
+- make run- experiments copy /out directory 
+- run the automation script on different commits (the first one of each new experiment)
+
+
+PDF experiments:
+23203939fc3032777f4440ccfeb4c8e19e7891d0
+- 'jsc': ('jsc', '2022-01-21T17:24:29+00:00'
+- 'ntp': ('ntp', '2022-01-21T17:24:29+00:00'
+- 'mupdf': ('pdf_fuzzer', '2022-01-21T17:24:29+00:00'
+- 'ghostscript': ('gstoraster_fuzzer', '2022-01-28T17:47:00+00:00'
+
+- 'giflib': ('dgif_target', '2022-01-21T17:24:29+00:00', [
+
+
+2020-09-21T08:17:58-07:00
+running each pdf experiment with commit specified:
+PYTHONPATH=. python3 benchmarks/oss_fuzz_benchmark_integration.py  \
+-p giflib \
+-f dgif_target \
+-c 23203939fc3032777f4440ccfeb4c8e19e7891d0 \
+-d 2022-01-21T17:24:29+00:00
+
+PYTHONPATH=. python3 experiment/run_experiment.py --experiment-config /home/c01flro/fuzzbench/experiment/test_data/giflib.yaml --benchmarks giflib_dgif_target --experiment-name giflib --fuzzers afl aflsmartformat -a
+
+PYTHONPATH=. python3 experiment/run_experiment.py --experiment-config /home/uni/fuzzbench_clean/test.yaml --benchmarks libpng-1.2.56 --experiment-name baseline --fuzzers afl -a
+
+
+##########################################################################################
+######	already run experiments:
+ghostscript_gstoraster_fuzzer
+running each pdf experiment with commit specified:
+PYTHONPATH=. python3 benchmarks/oss_fuzz_benchmark_integration.py  \
+-p ghostscript \
+-f gstoraster_fuzzer \
+-c c34c308faad86d154b52586ff66de8d77187cafd \
+-d 2022-01-28T17:47:00+00:00
+
+
+PYTHONPATH=. python3 experiment/run_experiment.py --experiment-config /home/forian/uni/fuzzbench_aflsmartformat/experiment/test_data/local-experiment-config.yaml --benchmarks ghostscript_gstoraster_fuzzer --experiment-name ghostscript-afl-aflsmartformat --fuzzers afl aflsmartformat -a
+
+
+
+##########################################################################################
+######	saved commands
+
+see load:  top/uptime
+see space: df -h
+
+TMUX
+- tmux new -s myname
+- detach: strg-b + d
+- tmux attach-session -t exp1
+- keep log files
+    strg-b + :, type in capture-pane -S - + Return
+    strg-b + :, type in save-buffer /home/c01flro/logs/name.txt + return
+
+
+scp -R -o 'ProxyJump c01flro@ssh.cispa.de' /home/forian/uni/fuzzbench_format_fuzzer/fuzzers/aflsmartformat c01flro@colossus11.cispa.de:/home/c01flro/fuzzbench/fuzzers/aflsmartformat
+
+
+make debug-afl-jsc_jsc
+$ROOT_DIR/docker/benchmark-runner/startup-runner.sh 
+run the jsc binary
+run the commands by hand to checkout the commit
+
+
+docker container start CONTAINER
+docker exec -it CONTAINER /bin/bash
+docker cp CONTAINER:SRC DEST 
+docker system prune -a --volumes
+
+source .venv/bin/activate
+
+ncdu
+
+
+
+git --no-pager log -1 master --format=%cd --date=iso-strict
+
+PYTHONPATH=. python3 benchmarks/oss_fuzz_benchmark_integration.py -p ghostscript -f gstoraster_fuzzer -c master -d 2021-11-22T20:30:59+00:00
+
+
+PYTHONPATH=. python3 experiment/run_experiment.py \
+-c experiment/test_data/local-exp.yaml \
+-b ghostscript_gstoraster_fuzzer \
+-e oss-fuzz-integration-test2 \
+-f afl
+
+PYTHONPATH=. python3 experiment/run_experiment.py \
+-c experiment/test_data/local-exp.yaml \
+-b ghostscript_gstoraster \
+-e oss-fuzz-integration-test \
+-f aflsmart
+
+--> change the cloning of freetype
+
+
+
+PYTHONPATH=. python3 benchmarks/oss_fuzz_benchmark_integration.py -p giflib -f dgif_target -c master -d 2021-11-22T20:30:59+00:00
+WARNING:root:gcloud not found in PATH.
+
+PYTHONPATH=. python3 experiment/run_experiment.py \
+-c experiment/test_data/local-exp.yaml \
+-b giflib_dgif_target \
+-e oss-fuzz-integration-test3 \
+-f afl
+
+
+
+
+PYTHONPATH=. python3 experiment/run_experiment.py --experiment-config experiment/test_data/local-exp-test.yaml \  --experiment-name testingstuff_comp --fuzzers aflsmartformat aflsmart --benchmarks boost core-utils
+
+PYTHONPATH=. python3 experiment/run_experiment.py -c experiment/test_data/local-exp-test.yaml -e testinglibzip -f aflsmartformat -b libzip_aflsmartformat
+
+PYTHONPATH=. python3 experiment/run_experiment.py -c experiment/test_data/local-exp-test.yaml -e testingcpython3 -f aflsmartformat -b cpython3_aflsmartformat
+
+PYTHONPATH=. python3 experiment/run_experiment.py \
+-c experiment/test_data/local-exp-test-baseline.yaml \
+-b freetype2-2017 bloaty_fuzz_target \
+-e baseline \
+-f afl libfuzzer
+
+PYTHONPATH=. python3 experiment/run_experiment.py \
+-c experiment/test_data/local-exp-test.yaml \
+-b poppler_pdf_fuzzer \
+-e poppler-aflsmart \
+-f aflsmart
+
+PYTHONPATH=. python3 experiment/run_experiment.py \
+-c experiment/test_data/local-exp-test.yaml \
+-b libpng-1.2.56 \
+-e aflsmart \
+-f aflsmart aflsmartformat
+
+##########################################################################################
+######	integrate the oss fuzz experiments
+export AFL_SKIP_CPUFREQ=1 
+-> add this to .bashrc 
+
+https://github.com/google/fuzzbench/blob/master/benchmarks/oss_fuzz_benchmark_integration.py 
+
+https://www.sweetscape.com/010editor/repository/templates/ 
+
+PYTHONPATH=. python3 benchmarks/oss_fuzz_benchmark_integration.py -p $PROJECT -f $FUZZ_TARGET -c $COMMIT_HASH -d $COMMIT_DATE
+
+
+!problem fromat fuzzer needs to support the file type!
+https://www.sweetscape.com/010editor/repository/templates/ 
+e.g. 7zip gzip rar
+
+To debug fuzzer run-time issues, you can either: 
+make debug
+
+
+
+idea: look at the seeds to determine the input type
+look at the directory 
+check with command: file input
+
+in the docker container: /out/seeds/ 
+
+e.g:
+root@91c4b5bd9c7b:/out# file /out/seeds/1d235a0efef192095e9a4de48a1f1960a2cae3ab 
+/out/seeds/1d235a0efef192095e9a4de48a1f1960a2cae3ab: PNG image data, 78 x 84, 8-bit grayscale, non-interlaced 
+
+
+templates available
+
+
+
+
+##########################################################################################
+######	Logs
+- some files might have a random byte in the beginning, before starting the actual file --> file might not show the actual file (sometimes in the beginning, sometimes in the end)
+
+
+
+
+
+INFO:root:Building measurer for benchmark: ghostscript_gstoraster_fuzzer.
+ERROR:root:Executed command: "make -j build-coverage-ghostscript_gstoraster_fuzzer" returned: 2. Extras: {'output': '01e1ac18e72802be892a704639018782aba5b9a7ce2636754d5c996 done\n#5 extracting sha256:43b22d9f6cbff8b52bf4cf3ac7e0665eafca0cb8893c16ba0a2d1e69b94e128e\n#5 extracting sha256:43b22d9f6cbff8b52bf4cf3ac7e0665eafca0cb8893c16ba0a2d1e69b94e128e done\n#5 extracting sha256:bfa42ec457a5eadb32c10b13946c3583f96c2e0f471ecd8f45c5ece67ea5928b done\n#5    completed: 2021-11-30 10:49:40.724762496 +0000 UTC\n#5     duration: 1m35.194195303s\n\n\n#6 [2/8] RUN apt-get update && apt-get install -y autoconf zlibc libtool li...\n#6       digest: sha256:97637820dc55b6f47c179c2c1f7c198c660f768fe02490d94b12d97d6a97dc69\n#6         name: "[2/8] RUN apt-get update && apt-get install -y autoconf zlibc libtool liblcms2-dev libpng-dev"\n#6      started: 2021-11-30 10:49:41.010659816 +0000 UTC\n#6 3.289 Hit:1 http://archive.ubuntu.com/ubuntu focal InRelease\n#6 3.289 Get:2 http://archive.ubuntu.com/ubuntu focal-updates InRelease [114 kB]\n#6 3.289 Get:3 http://security.ubuntu.com/ubuntu focal-security InRelease [114 kB]\n#6 3.289 Hit:4 http://ppa.launchpad.net/git-core/ppa/ubuntu focal InRelease\n#6 3.354 Get:5 http://archive.ubuntu.com/ubuntu focal-backports InRelease [101 kB]\n#6 4.126 Fetched 328 kB in 1s (338 kB/s)\n#6 4.126 Reading package lists...\n#6 5.580 Reading package lists...\n#6 6.958 Building dependency tree...\n#6 7.167 Reading state information...\n#6 7.383 The following additional packages will be installed:\n#6 7.383   automake autotools-dev liblcms2-2 libltdl-dev libltdl7 libpng-tools\n#6 7.384   libpng16-16 libsigsegv2 m4 zlib1g-dev\n#6 7.386 Suggested packages:\n#6 7.386   autoconf-archive gnu-standards autoconf-doc gettext liblcms2-utils\n#6 7.386   libtool-doc gfortran | fortran95-compiler gcj-jdk m4-doc\n#6 7.464 The following NEW packages will be installed:\n#6 7.465   autoconf automake autotools-dev liblcms2-2 liblcms2-dev libltdl-dev libltdl7\n#6 7.466   libpng-dev libpng-tools libpng16-16 libsigsegv2 libtool m4 zlib1g-dev zlibc\n#6 7.540 0 upgraded, 15 newly installed, 0 to remove and 0 not upgraded.\n#6 7.540 Need to get 11.3 MB of archives.\n#6 7.540 After this operation, 18.3 MB of additional disk space will be used.\n#6 7.540 Get:1 http://archive.ubuntu.com/ubuntu focal/main amd64 libpng16-16 amd64 1.6.37-2 [179 kB]\n#6 7.660 Get:2 http://archive.ubuntu.com/ubuntu focal/main amd64 libsigsegv2 amd64 2.12-2 [13.9 kB]\n#6 7.662 Get:3 http://archive.ubuntu.com/ubuntu focal/main amd64 m4 amd64 1.4.18-4 [199 kB]\n#6 7.686 Get:4 http://archive.ubuntu.com/ubuntu focal/main amd64 autoconf all 2.69-11.1 [321 kB]\n#6 7.711 Get:5 http://archive.ubuntu.com/ubuntu focal/main amd64 autotools-dev all 20180224.1 [39.6 kB]\n#6 7.714 Get:6 http://archive.ubuntu.com/ubuntu focal/main amd64 automake all 1:1.16.1-4ubuntu6 [522 kB]\n#6 7.753 Get:7 http://archive.ubuntu.com/ubuntu focal/main amd64 liblcms2-2 amd64 2.9-4 [140 kB]\n#6 7.763 Get:8 http://archive.ubuntu.com/ubuntu focal/main amd64 liblcms2-dev amd64 2.9-4 [9097 kB]\n#6 8.958 Get:9 http://archive.ubuntu.com/ubuntu focal/main amd64 libltdl7 amd64 2.4.6-14 [38.5 kB]\n#6 9.009 Get:10 http://archive.ubuntu.com/ubuntu focal/main amd64 libltdl-dev amd64 2.4.6-14 [162 kB]\n#6 9.146 Get:11 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 zlib1g-dev amd64 1:1.2.11.dfsg-2ubuntu1.2 [155 kB]\n#6 9.150 Get:12 http://archive.ubuntu.com/ubuntu focal/main amd64 libpng-dev amd64 1.6.37-2 [175 kB]\n#6 9.157 Get:13 http://archive.ubuntu.com/ubuntu focal/main amd64 libpng-tools amd64 1.6.37-2 [26.1 kB]\n#6 9.161 Get:14 http://archive.ubuntu.com/ubuntu focal/main amd64 libtool all 2.4.6-14 [161 kB]\n#6 9.164 Get:15 http://archive.ubuntu.com/ubuntu focal/universe amd64 zlibc amd64 0.9k-4.3 [63.9 kB]\n#6 9.605 debconf: delaying package configuration, since apt-utils is not installed\n#6 9.863 Fetched 11.3 MB in 2s (6688 kB/s)\n#6 10.12 Selecting previously unselected package libpng16-16:amd64.\r\n#6 10.12 (Reading database ... \r(Reading database ... 5%\r(Reading database ... 10%\r(Reading database ... 15%\r(Reading database ... 20%\r(Reading database ... 25%\r(Reading database ... 30%\r(Reading database ... 35%\r(Reading database ... 40%\r(Reading database ... 45%\r(Reading database ... 50%\r(Reading database ... 55%\r(Reading database ... 60%\r(Reading database ... 65%\r(Reading database ... 70%\r(Reading database ... 75%\r(Reading database ... 80%\r(Reading database ... 85%\r(Reading database ... 90%\r(Reading database ... 95%\r(Reading database ... 100%\r(Reading database ... 21270 files and directories currently installed.)\r\n#6 10.14 Preparing to unpack .../00-libpng16-16_1.6.37-2_amd64.deb ...\r\n#6 10.32 Unpacking libpng16-16:amd64 (1.6.37-2) ...\r\n#6 10.66 Selecting previously unselected package libsigsegv2:amd64.\r\n#6 10.66 Preparing to unpack .../01-libsigsegv2_2.12-2_amd64.deb ...\r\n#6 10.71 Unpacking libsigsegv2:amd64 (2.12-2) ...\r\n#6 11.18 Selecting previously unselected package m4.\r\n#6 11.19 Preparing to unpack .../02-m4_1.4.18-4_amd64.deb ...\r\n#6 11.48 Unpacking m4 (1.4.18-4) ...\r\n#6 11.91 Selecting previously unselected package autoconf.\r\n#6 11.92 Preparing to unpack .../03-autoconf_2.69-11.1_all.deb ...\r\n#6 11.98 Unpacking autoconf (2.69-11.1) ...\r\n#6 12.56 Selecting previously unselected package autotools-dev.\r\n#6 12.57 Preparing to unpack .../04-autotools-dev_20180224.1_all.deb ...\r\n#6 12.61 Unpacking autotools-dev (20180224.1) ...\r\n#6 12.85 Selecting previously unselected package automake.\r\n#6 12.85 Preparing to unpack .../05-automake_1%3a1.16.1-4ubuntu6_all.deb ...\r\n#6 12.90 Unpacking automake (1:1.16.1-4ubuntu6) ...\r\n#6 13.77 Selecting previously unselected package liblcms2-2:amd64.\r\n#6 13.77 Preparing to unpack .../06-liblcms2-2_2.9-4_amd64.deb ...\r\n#6 13.81 Unpacking liblcms2-2:amd64 (2.9-4) ...\r\n#6 14.12 Selecting previously unselected package liblcms2-dev:amd64.\r\n#6 14.13 Preparing to unpack .../07-liblcms2-dev_2.9-4_amd64.deb ...\r\n#6 14.17 Unpacking liblcms2-dev:amd64 (2.9-4) ...\r\n#6 14.66 Selecting previously unselected package libltdl7:amd64.\r\n#6 14.66 Preparing to unpack .../08-libltdl7_2.4.6-14_amd64.deb ...\r\n#6 14.71 Unpacking libltdl7:amd64 (2.4.6-14) ...\r\n#6 15.08 Selecting previously unselected package libltdl-dev:amd64.\r\n#6 15.09 Preparing to unpack .../09-libltdl-dev_2.4.6-14_amd64.deb ...\r\n#6 15.20 Unpacking libltdl-dev:amd64 (2.4.6-14) ...\r\n#6 15.57 Selecting previously unselected package zlib1g-dev:amd64.\r\n#6 15.57 Preparing to unpack .../10-zlib1g-dev_1%3a1.2.11.dfsg-2ubuntu1.2_amd64.deb ...\r\n#6 15.61 Unpacking zlib1g-dev:amd64 (1:1.2.11.dfsg-2ubuntu1.2) ...\r\n#6 15.92 Selecting previously unselected package libpng-dev:amd64.\r\n#6 15.92 Preparing to unpack .../11-libpng-dev_1.6.37-2_amd64.deb ...\r\n#6 15.99 Unpacking libpng-dev:amd64 (1.6.37-2) ...\r\n#6 16.31 Selecting previously unselected package libpng-tools.\r\n#6 16.31 Preparing to unpack .../12-libpng-tools_1.6.37-2_amd64.deb ...\r\n#6 16.35 Unpacking libpng-tools (1.6.37-2) ...\r\n#6 16.61 Selecting previously unselected package libtool.\r\n#6 16.61 Preparing to unpack .../13-libtool_2.4.6-14_all.deb ...\r\n#6 16.67 Unpacking libtool (2.4.6-14) ...\r\n#6 16.97 Selecting previously unselected package zlibc.\r\n#6 16.97 Preparing to unpack .../14-zlibc_0.9k-4.3_amd64.deb ...\r\n#6 17.02 Unpacking zlibc (0.9k-4.3) ...\r\n#6 17.70 Setting up liblcms2-2:amd64 (2.9-4) ...\r\n#6 17.81 Setting up autotools-dev (20180224.1) ...\r\n#6 17.93 Setting up libsigsegv2:amd64 (2.12-2) ...\r\n#6 18.04 Setting up libpng16-16:amd64 (1.6.37-2) ...\r\n#6 18.15 Setting up libltdl7:amd64 (2.4.6-14) ...\r\n#6 18.28 Setting up liblcms2-dev:amd64 (2.9-4) ...\r\n#6 18.40 Setting up zlib1g-dev:amd64 (1:1.2.11.dfsg-2ubuntu1.2) ...\r\n#6 18.55 Setting up zlibc (0.9k-4.3) ...\r\n#6 18.77 Setting up libpng-tools (1.6.37-2) ...\r\n#6 19.10 Setting up libtool (2.4.6-14) ...\r\n#6 19.39 Setting up libpng-dev:amd64 (1.6.37-2) ...\r\n#6 19.55 Setting up m4 (1.4.18-4) ...\r\n#6 19.69 Setting up autoconf (2.69-11.1) ...\r\n#6 19.85 Setting up automake (1:1.16.1-4ubuntu6) ...\r\n#6 19.96 update-alternatives: using /usr/bin/automake-1.16 to provide /usr/bin/automake (automake) in auto mode\r\n#6 19.96 update-alternatives: warning: skip creation of /usr/share/man/man1/automake.1.gz because associated file /usr/share/man/man1/automake-1.16.1.gz (of link group automake) doesn\'t exist\r\n#6 19.96 update-alternatives: warning: skip creation of /usr/share/man/man1/aclocal.1.gz because associated file /usr/share/man/man1/aclocal-1.16.1.gz (of link group automake) doesn\'t exist\r\n#6 20.01 Setting up libltdl-dev:amd64 (2.4.6-14) ...\r\n#6 20.36 Processing triggers for libc-bin (2.31-0ubuntu9.2) ...\r\n#6    completed: 2021-11-30 10:50:07.618657511 +0000 UTC\n#6     duration: 26.607997695s\n\n\n#7 [3/8] RUN git clone --branch branch-2.2 --single-branch --depth 1 https:...\n#7       digest: sha256:435113f96c8b2c737de49b00c71c96c4557050a8cd360ae83a36578b811ce5c2\n#7         name: "[3/8] RUN git clone --branch branch-2.2 --single-branch --depth 1 https://github.com/apple/cups.git cups"\n#7      started: 2021-11-30 10:50:07.667642083 +0000 UTC\n#7 0.691 Cloning into \'cups\'...\n#7    completed: 2021-11-30 10:50:12.118600052 +0000 UTC\n#7     duration: 4.450957969s\n\n\n#8 [4/8] RUN git clone --branch VER-2-10-1 --single-branch --depth 1 https:...\n#8       digest: sha256:9dadb2df5bbce272742267742508b7d57fabd53ce3d03116604274f84ceba227\n#8         name: "[4/8] RUN git clone --branch VER-2-10-1 --single-branch --depth 1 https://git.sv.nongnu.org/r/freetype/freetype2.git freetype"\n#8      started: 2021-11-30 10:50:12.167013795 +0000 UTC\n#8 0.664 Cloning into \'freetype\'...\n#8 2.111 warning: redirecting to https://git.savannah.nongnu.org/r/freetype/freetype2.git/\n#8 2.215 fatal: dumb http transport does not support shallow capabilities\n#8    completed: 2021-11-30 10:50:14.520410073 +0000 UTC\n#8     duration: 2.353396278s\n#8        error: "executor failed running [/bin/sh -c git clone --branch VER-2-10-1 --single-branch --depth 1 https://git.sv.nongnu.org/r/freetype/freetype2.git freetype]: exit code: 128"\n\nexecutor failed running [/bin/sh -c git clone --branch VER-2-10-1 --single-branch --depth 1 https://git.sv.nongnu.org/r/freetype/freetype2.git freetype]: exit code: 128\ndocker/generated.mk:1374: recipe for target \'.ghostscript_gstoraster_fuzzer-project-builder\' failed\nmake: *** [.ghostscript_gstoraster_fuzzer-project-builder] Error 1\n'}
+ERROR:root:Failed to build measurer for ghostscript_gstoraster_fuzzer. Extras: {'traceback': 'Traceback (most recent call last):\n  File "/work/src/experiment/build/builder.py", line 84, in build_measurer\n    buildlib.build_coverage(benchmark)\n  File "/work/src/experiment/build/local_build.py", line 58, in build_coverage\n    result = make([image_name])\n  File "/work/src/experiment/build/local_build.py", line 33, in make\n    return new_process.execute(command, cwd=utils.ROOT_DIR)\n  File "/work/src/common/new_process.py", line 124, in execute\n    raise subprocess.CalledProcessError(retcode, command)\nsubprocess.CalledProcessError: Command \'[\'make\', \'-j\', \'build-coverage-ghostscript_gstoraster_fuzzer\']\' returned non-zero exit status 2.\n'}
+INFO:root:Build successes: []
+ERROR:root:Build failures: [('ghostscript_gstoraster_fuzzer',)]
+INFO:root:Sleeping for 257 secs before retrying.
+
+
+
+
+
+
+
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+INFO:root:Starting experiment.
+INFO:root:Building measurers.
+INFO:root:Concurrent builds: 30.
+INFO:root:Building using (<function build_measurer at 0x7f9173ca2b80>): [('poppler_pdf_fuzzer',)]
+INFO:root:Building measurer for benchmark: poppler_pdf_fuzzer.
+INFO:root:Done building measurer for benchmark: poppler_pdf_fuzzer.
+INFO:root:Build successes: [('poppler_pdf_fuzzer',)]
+INFO:root:Done building measurers.
+INFO:root:Building all fuzzer benchmarks.
+INFO:root:Concurrent builds: 30.
+INFO:root:Building using (<function build_fuzzer_benchmark at 0x7f9173ca2dc0>): [('aflsmart', 'poppler_pdf_fuzzer')]
+INFO:root:Building benchmark: poppler_pdf_fuzzer, fuzzer: aflsmart.
+INFO:root:Done building benchmark: poppler_pdf_fuzzer, fuzzer: aflsmart.
+INFO:root:Build successes: [('aflsmart', 'poppler_pdf_fuzzer')]
+INFO:root:Done building fuzzer benchmarks.
+INFO:root:Starting scheduler.
+INFO:root:Finding trials to schedule.
+INFO:root:Starting trials.
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+INFO:root:Start trial 2.
+INFO:root:Start trial 1.
+INFO:root:Done starting trials.
+INFO:root:Start measuring.
+INFO:root:Start measure_loop.
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:75: FutureWarning: Possible nested set at position 4
+  CHROME_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:200: FutureWarning: Possible nested set at position 3
+  SECURITY_CHECK_FAILURE_REGEX = re.compile(
+/usr/local/lib/python3.8/site-packages/clusterfuzz/stacktraces/constants.py:202: FutureWarning: Possible nested set at position 3
+  SECURITY_DCHECK_FAILURE_REGEX = re.compile(
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Reading experiment data from db.
+INFO:root:Done reading experiment data from db.
+WARNING:root:No snapshot data.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Reading experiment data from db.
+INFO:root:Done reading experiment data from db.
+WARNING:root:No snapshot data.
+INFO:root:Finding trials to schedule.
+INFO:root:Starting trials.
+INFO:root:Done starting trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Reading experiment data from db.
+INFO:root:Done reading experiment data from db.
+WARNING:root:No snapshot data.
+INFO:root:Measuring all trials.
+INFO:root:Done measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Done measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Done measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Done measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Done measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Done measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Done measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Done measuring all trials.
+INFO:root:Measuring all trials.
+INFO:root:Done measuring all trials.
+INFO:root:Reading experiment data from db.
+INFO:root:Done reading experiment data from db.
+WARNING:root:No snapshot data.
+INFO:root:Measuring all trials.
+INFO:root:Done measuring all trials.
+INFO:root:Finding trials to schedule.
+INFO:root:Starting trials.
+INFO:root:Done starting trials.
+INFO:root:Measuring all trials.
+INFO:root:Done measuring all trials.
+INFO:root:Finished measure loop.
+INFO:root:Start generating coverage reports.
+INFO:root:Generating coverage report for benchmark: poppler_pdf_fuzzer fuzzer: aflsmart.
+INFO:root:Merging profdata for fuzzer: aflsmart,benchmark: poppler_pdf_fuzzer.
+ERROR:root:Profdata files merging failed.
+ERROR:root:Error occurred when generating coverage report. Extras: {'traceback': 'Traceback (most recent call last):\n  File "/work/src/experiment/measurer/coverage_utils.py", line 73, in generate_coverage_report\n    coverage_reporter.generate_coverage_summary_json()\n  File "/work/src/experiment/measurer/coverage_utils.py", line 140, in generate_coverage_summary_json\n    result = generate_json_summary(coverage_binary,\n  File "/work/src/experiment/measurer/coverage_utils.py", line 267, in generate_json_summary\n    with open(output_file, \'w\') as dst_file:\nFileNotFoundError: [Errno 2] No such file or directory: \'/work/measurement-folders/poppler_pdf_fuzzer-aflsmart/merged.json\'\n'}
+INFO:root:Finished generating coverage reports.
+INFO:root:Finished measuring.
+INFO:root:Reading experiment data from db.
+INFO:root:Done reading experiment data from db.
+WARNING:root:No snapshot data.
+"/work/src/experiment/measurer/coverage_utils.py", line 73, in generate_coverage_report\n    coverage_reporter.generate_coverage_summary_json()\n  File "/work/src/experiment/measurer/coverage_utils.py
+
+
+
