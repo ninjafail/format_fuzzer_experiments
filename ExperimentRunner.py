@@ -67,7 +67,7 @@ class ExpRunner(object):
         """
         if not timeout:
             timeout = self.timeout
-        return subprocess.run(f"{cmd}", stdout=out, stderr=err, cwd=self.fuzzbench_path, shell=True,
+        return subprocess.run(f"{cmd}; exit", stdout=out, stderr=err, cwd=self.fuzzbench_path, shell=True,
                               timeout=timeout)
 
     def cleanup(self):
