@@ -1,25 +1,39 @@
+more_interesting = {
+    'jsc': ('jsc', '2022-01-21T17:24:29+00:00'),
+    'karchive': ('karchive_fuzzer', '2022-01-21T17:24:29+00:00'),
+    'libexif': ('exif_from_data_fuzzer', 'exif_loader_fuzzer', '2022-01-21T17:24:29+00:00'),
+    'ntp': ('ntp', '2022-01-21T17:24:29+00:00'),
+    'mupdf': ('pdf_fuzzer', '2022-01-21T17:24:29+00:00'),
+    'ghostscript': ('gstoraster_fuzzer', '2022-01-28T17:47:00+00:00'),
+    'karchive': ('karchive_fuzzer', '2022-01-28T17:47:00+00:00'),
+    'libexif': ('exif_from_data_fuzzer', '2022-01-28T17:47:00+00:00'),
+    'libpng-proto': ('png_proto_fuzzer_example', '2022-01-28T17:47:00+00:00'),
+}
+
+
 interesting_libs = {
-    'opencv_core_fuzzer_2021-11-22T20:30:59+00:00': ['Zip archive data, at least v6.3 to extract', 'XZ compressed data', 'gzip compressed data'],
-
-    'libyaml_libyaml_deconstructor_alt_fuzzer_2021-11-22T20:30:59+00:00': ['ASCII text','JSON data'],
-
-    'file_magic_fuzzer_2021-11-22T20:30:59+00:00': ['Zstandard compressed data', 'JSON data', 'and much more stuff'],
-
-    'libexif_exif_from_data_fuzzer_2021-11-22T20:30:59+00:00': ['JPEG image data, JFIF standard 1.01, resolution (DPI), density 72x72, segment length 16, Exif Standard: [TIFF image data', ],
-
-    'libical_libical_fuzzer_2021-11-22T20:30:59+00:00': ['vCalendar calendar file', 'ASCII text, with very long lines'],
-
-    'libldac_libldac_encode_fuzzer_2021-11-22T20:30:59+00:00': ['RIFF (little-endian) data, WAVE audio, ITU G.711 mu-law, stereo 8000 Hz', 'ASCII text'],
-
-    'jbig2dec_jbig2_fuzzer_2021-11-22T20:30:59+00:00': ['PGP Secret Sub-key', ],
-
-    'libevent_parse_query_fuzzer_2021-11-22T20:30:59+00:00': ['PDF document, version 1.7', ],
-
-    "'kimageformats': ('kimgio_fuzzer', '2021-11-22T20:30:59+00:00')": ['Zip archive data, at least v6.3 to extract', 'XZ compressed data', 'gzip compressed data, was "tar_prefix_test.tar"'],
-
-    "'nodejs': ('fuzz_url', '2021-11-22T20:30:59+00:00')": ['PDF document, version 1.2-1.7', '', ''],
-
-    "'libarchive': ('libarchive_fuzzer', '2021-11-22T20:30:59+00:00')": ['ISO-8859 text', 'ASCII text, with very long lines', 'Non-ISO extended-ASCII', 'C source, ASCII text', 'data'],
+    'opencv_core_fuzzer_2021-11-22T20:30:59+00:00':
+        ['Zip archive data, at least v6.3 to extract', 'XZ compressed data', 'gzip compressed data'],
+    'libyaml_libyaml_deconstructor_alt_fuzzer_2021-11-22T20:30:59+00:00':
+        ['ASCII text','JSON data'],
+    'file_magic_fuzzer_2021-11-22T20:30:59+00:00':
+        ['Zstandard compressed data', 'JSON data', 'and much more stuff'],
+    'libexif_exif_from_data_fuzzer_2021-11-22T20:30:59+00:00':
+        ['JPEG image data, JFIF standard 1.01, resolution (DPI), density 72x72, segment length 16, Exif Standard: [TIFF image data', ],
+    'libical_libical_fuzzer_2021-11-22T20:30:59+00:00':
+        ['vCalendar calendar file', 'ASCII text, with very long lines'],
+    'libldac_libldac_encode_fuzzer_2021-11-22T20:30:59+00:00':
+        ['RIFF (little-endian) data, WAVE audio, ITU G.711 mu-law, stereo 8000 Hz', 'ASCII text'],
+    'jbig2dec_jbig2_fuzzer_2021-11-22T20:30:59+00:00':
+        ['PGP Secret Sub-key', ],
+    'libevent_parse_query_fuzzer_2021-11-22T20:30:59+00:00':
+        ['PDF document, version 1.7', ],
+    "'kimageformats': ('kimgio_fuzzer', '2021-11-22T20:30:59+00:00')":
+        ['Zip archive data, at least v6.3 to extract', 'XZ compressed data', 'gzip compressed data, was "tar_prefix_test.tar"'],
+    "'nodejs': ('fuzz_url', '2021-11-22T20:30:59+00:00')":
+        ['PDF document, version 1.2-1.7', '', ''],
+    "'libarchive': ('libarchive_fuzzer', '2021-11-22T20:30:59+00:00')":
+        ['ISO-8859 text', 'ASCII text, with very long lines', 'Non-ISO extended-ASCII', 'C source, ASCII text', 'data'],
 
     "": ['', '', ''],
 }
