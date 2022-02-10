@@ -3,12 +3,13 @@
 x=0
 i=0
 
-for ((z=0;z<2;z++))
+while [ $x -lt 1 ]
 do
   (( i++ ))
   echo "$i"
-  x=$(python3 integrate_all_refactor.py)
-  echo "$x"
+  python3 integrate_all_commits.py
+  x=$?
+  echo $x
   systemctl stop docker
   rm -rf /var/lib/docker
   systemctl start docker

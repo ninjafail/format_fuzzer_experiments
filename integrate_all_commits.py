@@ -5,13 +5,13 @@ import os
 from integrate_all_commits_libs import current_libs
 from ExperimentRunner import Logger, save_leftover_libs, init_directory, ExpRunner
 
-RUN_NAME = "test_run_5"
+RUN_NAME = "test_run_1"
 SAVE_DIRECTORY = f"/home/forian/uni/{RUN_NAME}"
 FUZZBENCH_DIRECTORY = "/home/forian/uni/fuzzbench"
 TEST_RUN_TIMEOUT = 300              # the time a single experiment has building
-DEBUG = True                        # checks whether the logged errors should be printed aswell
+DEBUG = False                        # checks whether the logged errors should be printed aswell
 OSS_LIBRARIES = current_libs     # OSS_LIBRARIES to run
-# The libraries should have the format: {'project': (['fuzz_target1', ...], [(commit1, date1), ...])}
+# The libraries should have the format: {'project': [ ([fuzz_targets], commit1, date1), ... ]}
 
 
 def main() -> int:
@@ -34,9 +34,9 @@ def main() -> int:
     n = 0
 
     # start of the main loop
-    for project, (fuzz_target_list, commit_list) in OSS_LIBRARIES.items():
-        for fuzz_target in fuzz_target_list:
-            for commit_hash, date in commit_list:
+    for project, values in OSS_LIBRARIES.items():
+        for (fuzz_target_list, commit_hash, date) in values:
+            for fuzz_target in fuzz_target_list:
                 n += 1
                 experiment_name = f'{project}__{fuzz_target}__{commit_hash}__{date}'
                 logger.log(f'\n\n{n}. running {experiment_name}')
@@ -62,7 +62,7 @@ def main() -> int:
         # pop the experiment from the list and save all libraries still to do (in case of crash)
         oss_libraries.pop(project)
         save_leftover_libs('integrate_all_libs.py', oss_libraries)
-        if n > 30:
+        if n > 1:
             break
 
     logger.log("------------------------------------------ Finished ------------------------------------------")
