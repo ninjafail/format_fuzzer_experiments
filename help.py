@@ -21,7 +21,7 @@ class Logger(object):
         """
         if self.debug:
             print(obj)
-        with open(f"{self.save_dir}/log", 'a') as f:
+        with open(self.save_dir, 'a') as f:
             f.write(f"{obj}\n")
 
 
