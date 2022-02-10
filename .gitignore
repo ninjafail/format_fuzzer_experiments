@@ -2,5 +2,4 @@
 .idea/
 __pycache__/
 integrate_all_libs.py
-oss-fuzz_others
 python_scripts/get_seeds.py

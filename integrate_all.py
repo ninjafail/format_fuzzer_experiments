@@ -6,14 +6,16 @@
 # merge 2 dictionaries with {**dict1, **dict2} or dict1 | dict2
 import copy
 import os
+import time
+
 import integrate_all_libs
-from help import Logger, save_leftover_libs, init_directory, ExpRunner
+from ExperimentRunner import Logger, save_leftover_libs, init_directory, ExpRunner
 
 COMMIT_HASH = 'c34c308faad86d154b52586ff66de8d77187cafd'
-RUN_NAME = "test_run_5"
+RUN_NAME = "test_run_test"
 SAVE_DIRECTORY = f"/home/forian/uni/{RUN_NAME}"
 FUZZBENCH_DIRECTORY = "/home/forian/uni/fuzzbench"
-TEST_RUN_TIMEOUT = 300              # the time a single experiment has building
+TEST_RUN_TIMEOUT = 600              # the time a single experiment has building
 DEBUG = True                        # checks whether the logged errors should be printed aswell
 OSS_LIBRARIES = integrate_all_libs.current_libs     # OSS_LIBRARIES to run
 
@@ -38,6 +40,7 @@ def main() -> int:
             n += 1
             experiment_name = f'{project}__{fuzz_target}__{date}'
             logger.log(f'\n\n{n}. running {experiment_name}')
+            logger.log(f'{time.ctime(time.time())}')
 
             # if the system has been pruned give more time, since the base image needs to be reinstalled
             if system_pruned:

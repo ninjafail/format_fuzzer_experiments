@@ -3,7 +3,7 @@ import time
 import copy
 import os
 from integrate_all_commits_libs import current_libs
-from help import Logger, save_leftover_libs, init_directory, ExpRunner
+from ExperimentRunner import Logger, save_leftover_libs, init_directory, ExpRunner
 
 RUN_NAME = "test_run_5"
 SAVE_DIRECTORY = f"/home/forian/uni/{RUN_NAME}"
