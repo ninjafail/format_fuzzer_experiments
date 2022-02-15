@@ -102,7 +102,8 @@ class ExpRunner(object):
         # remove all build cache
         # p = Popen('echo y | docker builder prune -a')
 
-    def run_experiment(self, project: str, fuzz_target: str, date: str, commit_hash: str, timeout: int = None) -> bool:
+    def run_experiment(self, project: str, fuzz_target: str, date: str, commit_hash: str, timeout: int = None,
+                       cleanup: bool = False) -> bool:
         """Integrates and runs a single oss-fuzz experiment. Uses cleanup() in the end.
 
         :param project: The name of the OSS-fuzz project
@@ -110,6 +111,8 @@ class ExpRunner(object):
         :param date: The date of the commit, that should be used.
         :param commit_hash: The hash of the oss-fuzz commit, which should be used.
         :param timeout: the timeout to use instead of self.timeout
+        :param cleanup: Controls whether docker should be cleaned up in the end. Warning: This removes all containers
+        and images, except the base image!
         :return: True if the experiment was probably successful. False otherwise.
         """
         successful = True
@@ -173,7 +176,8 @@ class ExpRunner(object):
                 self.logger.log(f"\nERROR: Wasn't able to write this project to disk: {project_name}: \n{e}")
 
         # Remove all docker containers and all images except the base image
-        self.cleanup()
+        if cleanup:
+            self.cleanup()
 
         return successful
 
