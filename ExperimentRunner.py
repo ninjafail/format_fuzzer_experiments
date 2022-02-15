@@ -144,8 +144,7 @@ class ExpRunner(object):
 
             # test the experiment
             try:
-                cmd = f'source .venv/bin/activate; ' \
-                      f'make test-run-afl-{project}_{fuzz_target}'
+                cmd = f'make test-run-afl-{project}_{fuzz_target}'
                 self.run(cmd, out, err)
             except TimeoutError as e:
                 self.logger.log(f'\nNormal Timeout: {project} : {e}')
