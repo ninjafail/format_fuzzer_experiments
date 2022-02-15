@@ -62,8 +62,7 @@ def main() -> int:
         # pop the experiment from the list and save all libraries still to do (in case of crash)
         oss_libraries.pop(project)
         save_leftover_libs('integrate_all_libs.py', oss_libraries)
-        if n > 1:
-            break
+
 
     logger.log("------------------------------------------ Finished ------------------------------------------")
     logger.log(f"Exception counter: {exception_counter}")
