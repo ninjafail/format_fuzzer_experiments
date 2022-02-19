@@ -3,9 +3,9 @@ import os
 import itertools
 
 
-LIB_PATH = "/home/forian/uni/test_run_5"
+LIB_PATH = "/home/forian/uni/test_run_1"
 EXPERIMENT_NAME = LIB_PATH[LIB_PATH.rfind("/")+1:]
-DEBUG = False
+DEBUG = True
 # when printing there are more variables to control, whether to print to an output file or not, marked with TODO
 
 fail = {}
@@ -100,7 +100,8 @@ def get_fuzzing_exp():
     print("\tWriting all failed libs ... ", end='')
     should_write_fail = True  # TODO
     with open('../results/oss-fuzz_fail_test', 'a') as f:
-        f.write(f"\n\n\n-----------------------------------------------------{EXPERIMENT_NAME}---------------------------------------------------------\n")
+        if should_write_fail:
+            f.write(f"\n\n\n-----------------------------------------------------{EXPERIMENT_NAME}---------------------------------------------------------\n")
         for lib_name, (fuzz_targets, date) in fail.items():
             x = f"'{lib_name}': ({list(set(fuzz_targets))}, '{date}'), \n"
             if should_write_fail:
@@ -112,7 +113,8 @@ def get_fuzzing_exp():
     ascii = list(set(ascii))
     should_write_ascii = True  # TODO
     with open('../results/oss-fuzz_ascii_test', 'a') as f:
-        f.write(f"\n\n\n-----------------------------------------------------{EXPERIMENT_NAME}---------------------------------------------------------\n")
+        if should_write_ascii:
+            f.write(f"\n\n\n-----------------------------------------------------{EXPERIMENT_NAME}---------------------------------------------------------\n")
         for lib_name, fuzz_target, date in ascii:
             x = f"'{lib_name}': ('{fuzz_target}', '{date}'), \n"
             if should_write_ascii:
@@ -125,7 +127,8 @@ def get_fuzzing_exp():
     others = list(others for others, _ in itertools.groupby(others))
     should_write_others = True  # TODO
     with open('../results/oss-fuzz_others_test', 'a') as f:
-        f.write(f"\n\n\n-----------------------------------------------------{EXPERIMENT_NAME}---------------------------------------------------------\n")
+        if should_write_others:
+            f.write(f"\n\n\n-----------------------------------------------------{EXPERIMENT_NAME}---------------------------------------------------------\n")
         for lib_name, fuzz_target, date, file_types in others:
             x = f"'{lib_name}': ('{fuzz_target}', '{date}', [\n"
             if should_write_others:
@@ -208,6 +211,8 @@ def main():
     print("\tWriting all failed libs ... ", end='')
     should_write_fail = True   # TODO
     with open('../results/oss-fuzz_fail', 'a') as f:
+        if should_write_fail:
+            f.write(f"\n\n\n-----------------------------------------------------{EXPERIMENT_NAME}---------------------------------------------------------\n")
         for lib_name, (fuzz_targets, date) in fail.items():
             x = f"'{lib_name}': ({list(set(fuzz_targets))}, '{date}'), \n"
             if should_write_fail:
@@ -219,6 +224,8 @@ def main():
     ascii = list(set(ascii))
     should_write_ascii = True  # TODO
     with open('../results/oss-fuzz_ascii', 'a') as f:
+        if should_write_ascii:
+            f.write(f"\n\n\n-----------------------------------------------------{EXPERIMENT_NAME}---------------------------------------------------------\n")
         for lib_name, fuzz_target, date in ascii:
             x = f"'{lib_name}': ('{fuzz_target}', '{date}'), \n"
             if should_write_ascii:
@@ -231,6 +238,8 @@ def main():
     others = list(others for others, _ in itertools.groupby(others))
     should_write_others = True  # TODO
     with open('../results/oss-fuzz_others', 'a') as f:
+        if should_write_others:
+            f.write(f"\n\n\n-----------------------------------------------------{EXPERIMENT_NAME}---------------------------------------------------------\n")
         for lib_name, fuzz_target, date, file_types in others:
             x = f"'{lib_name}': ('{fuzz_target}', '{date}', [\n"
             if should_write_others:
@@ -254,5 +263,5 @@ def main():
     print(f"Other libs: {len(others)}")
 
 
-# main()
+main()
 get_fuzzing_exp()

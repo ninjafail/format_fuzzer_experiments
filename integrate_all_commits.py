@@ -58,11 +58,11 @@ def main() -> int:
                 #     p1 = run('docker system prune -f')
                 #     log(DEBUG, str(p1.stdout.decode()))
                 #     system_pruned = True
-
+        if n > 25:
+            break
         # pop the experiment from the list and save all libraries still to do (in case of crash)
         oss_libraries.pop(project)
-        save_leftover_libs('integrate_all_libs.py', oss_libraries)
-
+        save_leftover_libs('integrate_all_commits_libs.py', oss_libraries)
 
     logger.log("------------------------------------------ Finished ------------------------------------------")
     logger.log(f"Exception counter: {exception_counter}")
