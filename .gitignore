@@ -3,3 +3,4 @@
 __pycache__/
 integrate_all_libs.py
 python_scripts/get_seeds.py
+venv/*

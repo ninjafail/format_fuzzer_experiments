@@ -4,9 +4,9 @@ Key question: Which ones have a binary template?
 Goal: to evaluate Format Fuzzer and compare it to afl
 
 TODO: 
-- run a pdf experiment for aflsmartformat + afl on colossus
-- write email at it@cispa.de cc rafael
-- ticket.cispa.de for that I have to redirect my browser to the local network of cispa
+- add README.md
+- evaluate experiments
+- run experiments
 
 - Automation script:
 	. What makes the experiments fail?
