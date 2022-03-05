@@ -42,31 +42,31 @@ experiment_ready = {
         'GIF image data, version 89a, 370 x 110'
     ]),
 
-    'libwebp':
-        ([
-             'fuzz_simple_api',
-             'fuzz_advanced_api',
-             'fuzz_animation_api',
-             'fuzz_demux_api'],
-         '2022-01-21T17:24:29+00:00', [
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 63x66, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 128x128, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 1x1, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 31x13, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 20x16, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 1920x96, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 175x143, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 1x13, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 352x288, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 176x144, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 95x95, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 160x160, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 13x1, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 176x144, Scaling:, bad color specification, no clamping required'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 200x200, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 96x96, Scaling: [none]x[none], YUV color, decoders should clamp'
-             'RIFF (little-endian) data, Web/P image, VP8 encoding, 320x240, Scaling: [none]x[none], YUV color, decoders should clamp'
-         ]),
+    'libwebp': (
+        ['fuzz_simple_api',
+         'fuzz_advanced_api',
+         'fuzz_animation_api',
+         'fuzz_demux_api'],
+        '2022-01-21T17:24:29+00:00',
+        ['RIFF (little-endian) data, Web/P image, VP8 encoding, 63x66, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 128x128, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 1x1, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 31x13, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 20x16, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 1920x96, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 175x143, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 1x13, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 352x288, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 176x144, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 95x95, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 160x160, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 13x1, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 176x144, Scaling:, bad color specification, no clamping required'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 200x200, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 96x96, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image, VP8 encoding, 320x240, Scaling: [none]x[none], YUV color, decoders should clamp'
+        ]
+    ),
 
 }
