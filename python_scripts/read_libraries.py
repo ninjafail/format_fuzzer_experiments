@@ -1,7 +1,9 @@
-import os
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import subprocess
 import typing
 import all_libs_commits
+from ExperimentRunner import get_fuzz_targets
 
 
 OSS_FUZZ_BENCHMARKS_PATH = '/home/forian/uni/fuzzbench/third_party/oss-fuzz/projects'
@@ -67,25 +69,6 @@ def read_libraries(commit_hash: str = 'master') -> dict:
         experiments[d] = (fuzz_target, output.replace("\n", ""))
 
     return experiments
-
-
-def get_fuzz_targets(dir_path: os.path) -> typing.List[str]:
-    """Returns all the fuzz targets of an certain oss-fuzz experiment. Returns an empty List, if none were found.
-
-    :param dir_path: The path of the oss-fuzz experiment
-    :return: List of fuzz targets
-    """
-    x = [f for f in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, f))]
-    # get the targets
-    fuzz_targets = []
-    for f in x:
-        if ".cc" in f or \
-           ".cpp" in f or \
-           ".C" in f or \
-           ".c++" in f or \
-           ".c" in f:
-            fuzz_targets.append(f[:f.rindex('.')])
-    return fuzz_targets
 
 
 def read_all_libraries(commit_hash: str = 'master') -> dict:

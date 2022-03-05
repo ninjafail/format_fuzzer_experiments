@@ -1,6 +1,6 @@
 import subprocess
 import os
-from typing import IO
+from typing import IO, List
 
 
 class Logger(object):
@@ -195,3 +195,23 @@ def save_leftover_libs(save_path: str, libs: dict):
         for k, v in libs.items():
             f.write(f"\t'{k}': {v},\n")
         f.write("}\n")
+
+
+def get_fuzz_targets(dir_path: os.path) -> List[str]:
+    """Given the directory of an oss-fuzz experiment, it returns all the fuzz targets of this oss-fuzz experiment.
+    Returns an empty List, if none were found.
+
+    :param dir_path: The path of the oss-fuzz experiment
+    :return: List of fuzz targets
+    """
+    x = [f for f in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, f))]
+    # get the targets
+    fuzz_targets = []
+    for f in x:
+        if ".cc" in f or \
+           ".cpp" in f or \
+           ".C" in f or \
+           ".c++" in f or \
+           ".c" in f:
+            fuzz_targets.append(f[:f.rindex('.')])
+    return fuzz_targets
