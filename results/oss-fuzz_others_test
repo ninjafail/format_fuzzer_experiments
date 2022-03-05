@@ -888,3 +888,341 @@
 	'XML 1.0 document, ASCII text'
 ]),
 
+
+
+
+-----------------------------------------------------test_run_1---------------------------------------------------------
+'file': ('magic_fuzzer', '2020-12-10T09:49:27+11:00', [
+	'Zstandard compressed data (v0.8+), Dictionary ID: 1'
+	'FIT Map data, unit id 65536, serial 3879446968, Sat May 31 12:00:34 2014, manufacturer 1 (garmin), product 1632, type 4 (Activity)'
+	'Audio file with ID3 version 2.2.0, contains:MPEG ADTS, layer III, v1, 96 kbps, 44.1 kHz, Monaural'
+	'HDD Raw Copy Tool 1.10 - HD model: ST500DM0 02-1BD142 serial: 51D20233A7C0'
+	'JSON data'
+	'Zstandard compressed data (v0.8+), Dictionary ID: 2'
+	'Zstandard compressed data (v0.2)'
+	'PGP key public ring (v2) created Fri May 21 07:20:00 1993, not expire RSA (Encrypt or Sign) 1024 bits MPI=0xa738778e61379a85...'
+	'PGP Secret Key - 3072b created on Sat Aug 22 16:05:57 2020 - RSA (Encrypt or Sign) e=65537 Plaintext or unencrypted data'
+	'ASCII text'
+	'Zstandard compressed data (v0.8+), Dictionary ID: 67305985'
+	'Zstandard compressed data (v0.8+), Dictionary ID: 770'
+	'Microsoft Excel 2007+'
+	'Microsoft Word 2007+'
+	'Zstandard compressed data (v0.7), Dictionary ID: 1'
+	'Zstandard compressed data (v0.8+), Dictionary ID: 513'
+	'Zstandard compressed data (v0.8+), Dictionary ID: None'
+	'ARJ archive data, v11, slash-switched, original name: , os: Unix'
+	'PGP/GPG key public ring (v4) created Tue Apr  8 00:23:01 1997 DSA 1024 bits MPI=0xf24b207f4f729f72...'
+	'Zstandard compressed data (v0.4)'
+	'Zip data (MIME type "application/vnd.nz.gen.geek_central.ti5x"?)'
+	'Audio file with ID3 version 2.4.0, contains:MPEG ADTS, layer III, v1, 192 kbps, 44.1 kHz, JntStereo'
+	'Zstandard compressed data (v0.7), Dictionary ID: 513'
+	'Zstandard compressed data (v0.5)'
+	'Adaptive Multi-Rate Codec (GSM telephony)'
+	'Zstandard compressed data (v0.8+), Dictionary ID: 84148994'
+	'Zstandard compressed data (v0.6)'
+	'data'
+	'Linux rev 1.0 ext4 filesystem data, UUID=d32bbb08-3a76-4510-a064-3045f887dbdf (extents) (64bit) (large files) (huge files)'
+	'Apple Driver Map, blocksize 0'
+	'Zstandard compressed data (v0.3)'
+	'GEDCOM genealogy text version 5.5, ASCII text'
+]),
+
+'giflib': ('dgif_target', '2020-07-06T13:18:23-07:00', [
+	'GIF image data, version 89a, 125 x 25'
+	'GIF image data, version 89a, 290 x 48'
+	'GIF image data, version 89a, 275 x 100'
+	'GIF image data, version 89a, 30 x 60'
+	'GIF image data, version 89a, 500 x 220'
+	'GIF image data, version 89a, 350 x 230'
+	'GIF image data, version 87a, 40 x 40'
+	'GIF image data, version 89a, 400 x 160'
+	'GIF image data, version 87a, 640 x 350'
+	'GIF image data, version 87a, 320 x 200'
+	'GIF image data, version 89a, 340 x 150'
+	'GIF image data, version 89a, 10 x 10'
+	'GIF image data, version 89a, 33 x 87'
+	'GIF image data, version 89a, 400 x 240'
+	'GIF image data, version 89a, 11 x 29'
+	'GIF image data, version 89a, 140 x 90'
+	'GIF image data, version 89a, 700 x 220'
+	'GIF image data, version 89a, 100 x 100'
+	'GIF image data, version 87a, 640 x 400'
+	'GIF image data, version 89a, 370 x 110'
+]),
+
+'libical': ('libical_fuzzer', '2019-04-09T11:23:05-07:00', [
+	'vCalendar calendar file'
+	'ASCII text'
+	'ASCII text, with very long lines'
+	'vCard visiting card, version 2.1'
+	'empty'
+]),
+
+'libical': ('libical_fuzzer', '2019-05-03T07:18:39-07:00', [
+	'vCalendar calendar file'
+	'ASCII text'
+	'ASCII text, with very long lines'
+	'vCard visiting card, version 2.1'
+	'empty'
+]),
+
+'libical': ('libical_fuzzer', '2020-12-10T09:49:27+11:00', [
+	'vCalendar calendar file'
+	'ASCII text'
+	'ASCII text, with very long lines'
+	'vCard visiting card, version 2.1'
+	'empty'
+]),
+
+'libldac': ('libldac_encode_fuzzer', '2018-12-25T06:45:41-08:00', [
+	'RIFF (little-endian) data, WAVE audio, GSM 6.10, mono 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 8 bit, mono 44100 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, 4 channels 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 44100 Hz'
+	'RIFF (little-endian) data, WAVE audio, ITU G.711 mu-law, stereo 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 8 bit, mono 11025 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 1000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft ADPCM, mono 11025 Hz'
+	'RIFF (little-endian) data, WAVE audio, stereo 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 48000 Hz'
+	'ASCII text'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, stereo 44100 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, stereo 48000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 11025 Hz'
+	'RIFF (little-endian) data, WAVE audio, ITU G.711 A-law, stereo 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 8 bit, mono 16000 Hz'
+]),
+
+'libldac': ('libldac_encode_fuzzer', '2019-09-30T09:24:21-07:00', [
+	'RIFF (little-endian) data, WAVE audio, GSM 6.10, mono 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 8 bit, mono 44100 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, 4 channels 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 44100 Hz'
+	'RIFF (little-endian) data, WAVE audio, ITU G.711 mu-law, stereo 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 8 bit, mono 11025 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 1000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft ADPCM, mono 11025 Hz'
+	'RIFF (little-endian) data, WAVE audio, stereo 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 48000 Hz'
+	'ASCII text'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, stereo 44100 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, stereo 48000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 11025 Hz'
+	'RIFF (little-endian) data, WAVE audio, ITU G.711 A-law, stereo 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 8 bit, mono 16000 Hz'
+]),
+
+'libldac': ('libldac_encode_fuzzer', '2020-12-10T08:15:05-08:00', [
+	'RIFF (little-endian) data, WAVE audio, GSM 6.10, mono 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 8 bit, mono 44100 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, 4 channels 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 44100 Hz'
+	'RIFF (little-endian) data, WAVE audio, ITU G.711 mu-law, stereo 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 8 bit, mono 11025 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 1000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft ADPCM, mono 11025 Hz'
+	'RIFF (little-endian) data, WAVE audio, stereo 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 48000 Hz'
+	'ASCII text'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, stereo 44100 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, stereo 48000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 11025 Hz'
+	'RIFF (little-endian) data, WAVE audio, ITU G.711 A-law, stereo 8000 Hz'
+	'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 8 bit, mono 16000 Hz'
+]),
+
+'libyaml': ('libyaml_deconstructor_alt_fuzzer', '2016-12-01T13:36:00-08:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_deconstructor_alt_fuzzer', '2020-12-10T09:49:27+11:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_deconstructor_fuzzer', '2016-12-01T13:36:00-08:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_deconstructor_fuzzer', '2020-12-10T09:49:27+11:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_dumper_fuzzer', '2016-12-01T13:36:00-08:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_dumper_fuzzer', '2020-12-10T09:49:27+11:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_emitter_fuzzer', '2016-12-01T13:36:00-08:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_emitter_fuzzer', '2020-12-10T09:49:27+11:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_loader_fuzzer', '2016-12-01T13:36:00-08:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_loader_fuzzer', '2020-12-10T09:49:27+11:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_parser_fuzzer', '2016-12-01T13:36:00-08:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_parser_fuzzer', '2020-12-10T09:49:27+11:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_reformatter_alt_fuzzer', '2016-12-01T13:36:00-08:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_reformatter_alt_fuzzer', '2020-12-10T09:49:27+11:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_reformatter_fuzzer', '2016-12-01T13:36:00-08:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_reformatter_fuzzer', '2020-12-10T09:49:27+11:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_scanner_fuzzer', '2016-12-01T13:36:00-08:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'libyaml': ('libyaml_scanner_fuzzer', '2020-12-10T09:49:27+11:00', [
+	'JSON data'
+	'ASCII text'
+]),
+
+'zlib': ('checksum_fuzzer', '2020-12-09T21:52:40-08:00', [
+	'ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, not stripped'
+	'C source, ASCII text'
+	'current ar archive'
+	'ReStructuredText file, ASCII text'
+	'PDF document, version 1.4'
+	'XML 1.0 document, ASCII text'
+	'ELF 64-bit LSB relocatable, x86-64, version 1 (GNU/Linux), not stripped'
+	'ASCII text'
+	'makefile script, ASCII text'
+	'troff or preprocessor input, ASCII text'
+	'DCL command file, ASCII text'
+	'ASCII text, with CRLF line terminators'
+]),
+
+'zlib': ('compress_fuzzer', '2020-12-09T21:52:40-08:00', [
+	'ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, not stripped'
+	'C source, ASCII text'
+	'current ar archive'
+	'ReStructuredText file, ASCII text'
+	'PDF document, version 1.4'
+	'XML 1.0 document, ASCII text'
+	'ELF 64-bit LSB relocatable, x86-64, version 1 (GNU/Linux), not stripped'
+	'ASCII text'
+	'makefile script, ASCII text'
+	'troff or preprocessor input, ASCII text'
+	'DCL command file, ASCII text'
+	'ASCII text, with CRLF line terminators'
+]),
+
+'zlib': ('example_dict_fuzzer', '2020-12-09T21:52:40-08:00', [
+	'ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, not stripped'
+	'C source, ASCII text'
+	'current ar archive'
+	'ReStructuredText file, ASCII text'
+	'PDF document, version 1.4'
+	'XML 1.0 document, ASCII text'
+	'ELF 64-bit LSB relocatable, x86-64, version 1 (GNU/Linux), not stripped'
+	'ASCII text'
+	'makefile script, ASCII text'
+	'troff or preprocessor input, ASCII text'
+	'DCL command file, ASCII text'
+	'ASCII text, with CRLF line terminators'
+]),
+
+'zlib': ('example_flush_fuzzer', '2020-12-09T21:52:40-08:00', [
+	'ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, not stripped'
+	'C source, ASCII text'
+	'current ar archive'
+	'ReStructuredText file, ASCII text'
+	'PDF document, version 1.4'
+	'XML 1.0 document, ASCII text'
+	'ELF 64-bit LSB relocatable, x86-64, version 1 (GNU/Linux), not stripped'
+	'ASCII text'
+	'makefile script, ASCII text'
+	'troff or preprocessor input, ASCII text'
+	'DCL command file, ASCII text'
+	'ASCII text, with CRLF line terminators'
+]),
+
+'zlib': ('example_large_fuzzer', '2020-12-09T21:52:40-08:00', [
+	'ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, not stripped'
+	'C source, ASCII text'
+	'current ar archive'
+	'ReStructuredText file, ASCII text'
+	'PDF document, version 1.4'
+	'XML 1.0 document, ASCII text'
+	'ELF 64-bit LSB relocatable, x86-64, version 1 (GNU/Linux), not stripped'
+	'ASCII text'
+	'makefile script, ASCII text'
+	'troff or preprocessor input, ASCII text'
+	'DCL command file, ASCII text'
+	'ASCII text, with CRLF line terminators'
+]),
+
+'zlib': ('example_small_fuzzer', '2020-12-09T21:52:40-08:00', [
+	'ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, not stripped'
+	'C source, ASCII text'
+	'current ar archive'
+	'ReStructuredText file, ASCII text'
+	'PDF document, version 1.4'
+	'XML 1.0 document, ASCII text'
+	'ELF 64-bit LSB relocatable, x86-64, version 1 (GNU/Linux), not stripped'
+	'ASCII text'
+	'makefile script, ASCII text'
+	'troff or preprocessor input, ASCII text'
+	'DCL command file, ASCII text'
+	'ASCII text, with CRLF line terminators'
+]),
+
+'zlib': ('minigzip_fuzzer', '2020-12-09T21:52:40-08:00', [
+	'ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, not stripped'
+	'C source, ASCII text'
+	'current ar archive'
+	'ReStructuredText file, ASCII text'
+	'PDF document, version 1.4'
+	'XML 1.0 document, ASCII text'
+	'ELF 64-bit LSB relocatable, x86-64, version 1 (GNU/Linux), not stripped'
+	'ASCII text'
+	'makefile script, ASCII text'
+	'troff or preprocessor input, ASCII text'
+	'DCL command file, ASCII text'
+	'ASCII text, with CRLF line terminators'
+]),
+
