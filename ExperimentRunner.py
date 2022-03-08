@@ -107,7 +107,7 @@ class ExpRunner(object):
         """Integrates and runs a single oss-fuzz experiment. Uses cleanup() in the end.
 
         :param project: The name of the OSS-fuzz project
-        :param fuzz_target: The fuzz target
+        :param fuzz_target: The fuzz target, use the name of the project, if the project has no fuzz targets
         :param date: The date of the commit, that should be used.
         :param commit_hash: The hash of the oss-fuzz commit, which should be used.
         :param timeout: the timeout to use instead of self.timeout
@@ -184,7 +184,7 @@ class ExpRunner(object):
 
 def save_leftover_libs(save_path: str, libs: dict):
     """Stores all libs in the dict (should be the ones that have not yet been fuzzed) to save_path,
-    formatted as a dictionary
+    formatted as a dictionary, named "current_libs"
 
     :param save_path: The path, where the libs should be stored
     :param libs: The OSS-fuzz libraries to be saved.
