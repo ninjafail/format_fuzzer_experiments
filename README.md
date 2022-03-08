@@ -39,7 +39,7 @@ print(get_fuzz_targets(path_of_ghostscript))
 
 ```python
 import ExperimentRunner as er
-from integrate_test_commits import get_one_commit, 
+from integrate_test_commits import get_one_commit
 
 logger = er.Logger(debug=True, save_directory='/home/florian/experiments')
 
@@ -59,6 +59,5 @@ while counter < 20:
             runner.run_experiment(project, fuzz_target, date, commit_hash)
             
     counter += 1
-    
 
 ```

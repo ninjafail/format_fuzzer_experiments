@@ -1,6 +1,7 @@
 import subprocess
 import os
-from typing import IO, List
+import copy
+from typing import IO, List, Tuple
 
 
 class Logger(object):
@@ -49,6 +50,7 @@ class ExpRunner(object):
         """
         self.timeout = test_run_timeout
         self.fuzzbench_path = fuzzbench_path
+        self.oss_fuzz_path = os.path.join(fuzzbench_path, 'third_party/oss-fuzz/projects')
         self.save_path = save_path
         if not logger:
             self.logger = Logger(os.path.join(self.save_path, 'log'), debug=debug)
@@ -180,6 +182,51 @@ class ExpRunner(object):
             self.cleanup()
 
         return successful
+
+    def get_one_commit(self, counter: int, project: str, fuzz_targets: List[str] = None) -> Tuple[List[str], str, str]:
+        """ get fuzz targets, commit and date for one oss-fuzz project
+        :param counter: the number of the commit to be taken (0: newest commit, 1: one older, ...)
+        :param project: The name of the oss-fuzz project
+        :param fuzz_targets: The fuzz_targets of the oss-fuzz project
+
+        :return: Tuple, consisting of: list of fuzz targets, commit hash, date,
+        If counter is bigger than the oldest commit, it returns [], '', ''.
+        """
+        # set default of fuzz target
+        if fuzz_targets is None:
+            fuzz_targets = [project]
+
+        # define the path of the project
+        project_path = os.path.join(self.oss_fuzz_path, project)
+
+        # checkout to master to get all possible commits
+        subprocess.run(f'git checkout master', shell=True, cwd=project_path,
+                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # get all possible commits and choose the right one, depending on counter
+        p = subprocess.run('git --no-pager log --pretty=format:"%h" -- .', shell=True, cwd=project_path,
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        commit_hashes = p.stdout.decode().split()
+        if counter >= len(commit_hashes):
+            return [], '', ''
+        commit_hash = commit_hashes[-counter]
+
+        # get all fuzz targets from the available fuzz targets
+        subprocess.run(f'git checkout {commit_hash}', shell=True, cwd=project_path,
+                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        avail_fuzz_targets = get_fuzz_targets(project_path)
+        if not avail_fuzz_targets:
+            avail_fuzz_targets = [project]
+        for fuzz_target in copy.deepcopy(fuzz_targets):
+            if fuzz_target not in avail_fuzz_targets:
+                fuzz_targets.remove(fuzz_target)
+
+        # get the date
+        p = subprocess.run(f'git --no-pager log -1 {commit_hash} --format=%cd --date=iso-strict', shell=True,
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=project_path)
+        date = p.stdout.decode().replace('\n', '')
+
+        return fuzz_targets, commit_hash, date
 
 
 def save_leftover_libs(save_path: str, libs: dict):
