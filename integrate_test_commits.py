@@ -3,16 +3,17 @@ import time
 import subprocess
 import copy
 import os
-from integrate_test_commits_libs import interesting, counter
+import traceback
+from integrate_test_commits_libs import current_libs, counter
 from ExperimentRunner import Logger, save_leftover_libs, init_directory, ExpRunner, get_fuzz_targets
 
-RUN_NAME = "test_run_1"
+RUN_NAME = "integrate_test_commits_run_2"
 SAVE_DIRECTORY = f"/home/forian/uni/{RUN_NAME}"
 FUZZBENCH_DIRECTORY = "/home/forian/uni/fuzzbench"
 OSS_FUZZ_BENCHMARKS_PATH = FUZZBENCH_DIRECTORY + '/third_party/oss-fuzz/projects'
-TEST_RUN_TIMEOUT = 300              # the time a single experiment has building
+TEST_RUN_TIMEOUT = 300               # the time a single experiment has building
 DEBUG = False                        # checks whether the logged errors should be printed aswell
-OSS_LIBRARIES = interesting     # OSS_LIBRARIES to run
+OSS_LIBRARIES = current_libs     # OSS_LIBRARIES to run
 # The libraries should have the format: {'project': ([fuzz_targets], date, [seeds]), ...}
 
 
@@ -75,7 +76,6 @@ def save_leftover_libs_counter(save_path: str, libs: dict, counter: int):
         f.write(f'\ncounter = {counter}\n')
 
 
-
 def test_commits() -> int:
     """idea:
     for each interesting library do one test run with latest commit,
@@ -83,6 +83,7 @@ def test_commits() -> int:
 
     :return:
     """
+    # TODO: extract success check, documentation
     # create directory, if they don't already exist
     init_directory(SAVE_DIRECTORY)
 
@@ -103,64 +104,84 @@ def test_commits() -> int:
     n = 0
 
     # start of the main loop
-    while n < 20:
+    while n < 1:
         for project, values in OSS_LIBRARIES.items():
             fuzz_targets, _, _ = values
-            fuzz_targets, commit_hash, date = get_one_commit(current_counter, project, fuzz_targets)
-
+            commit_hash, date = '', ''
+            try:
+                fuzz_targets, commit_hash, date = get_one_commit(current_counter, project, fuzz_targets)
+            except:
+                logger.log('ERROR: could not get the commit information:')
+                logger.log(traceback.format_exc())
             # if there are no fuzz targets, the experiment was unsuccessful
-            if not fuzz_targets:
-                val = oss_libraries.pop(project)
-                with open('unsuccessful', 'a') as f:
-                    f.write(f"'{project}': {val} \n\n")
-                save_leftover_libs_counter('integrate_test_commits_libs.py', oss_libraries, current_counter)
-                continue
-
+            try:
+                if not fuzz_targets:
+                    val = oss_libraries.pop(project)
+                    with open('unsuccessful', 'a') as f:
+                        f.write(f"'{project}': {val} \n\n")
+                    save_leftover_libs_counter('integrate_test_commits_libs.py', oss_libraries, current_counter)
+                    logger.log(f'{project} was unsuccessful. \n')
+                    continue
+            except:
+                logger.log(f'Error: {project} was unsuccessful but the other libs could not be stored:')
+                logger.log(traceback.format_exc())
             # otherwise, iterate over all fuzz_targets
             for fuzz_target in fuzz_targets:
-                n += 1
-                experiment_name = f'{project}__{fuzz_target}__{commit_hash}__{date}'
-                logger.log(f'\n\n{n}. running {experiment_name}')
-                logger.log(f'{time.ctime()}')
-                # if the system has been pruned give more time, since the base image needs to be reinstalled
-                if system_pruned:
-                    res = exp_runner.run_experiment(project, fuzz_target, date, commit_hash, cleanup=True,
-                                                    timeout=2 * TEST_RUN_TIMEOUT)
-                    system_pruned = False
-                else:
-                    res = exp_runner.run_experiment(project, fuzz_target, date, commit_hash, cleanup=True)
+                try:
+                    n += 1
+                    experiment_name = f'{project}__{fuzz_target}__{commit_hash}__{date}'
+                    logger.log(f'\n\n{n}. running {experiment_name}')
+                    logger.log(f'{time.ctime()}')
+                    # if the system has been pruned give more time, since the base image needs to be reinstalled
+                    if system_pruned:
+                        res = exp_runner.run_experiment(project, fuzz_target, date, commit_hash, cleanup=True,
+                                                        timeout=2 * TEST_RUN_TIMEOUT)
+                        system_pruned = False
+                    else:
+                        res = exp_runner.run_experiment(project, fuzz_target, date, commit_hash, cleanup=True)
 
-                if res:
-                    timeout_counter += 1
-                else:
-                    exception_counter += 1
+                    if res:
+                        timeout_counter += 1
+                    else:
+                        exception_counter += 1
 
-                # every x-th run prune the system
-                # if n % 25 == 0:
-                #     p1 = run('docker system prune -f')
-                #     log(DEBUG, str(p1.stdout.decode()))
-                #     system_pruned = True
+                    # every x-th run prune the system
+                    # if n % 25 == 0:
+                    #     p1 = run('docker system prune -f')
+                    #     log(DEBUG, str(p1.stdout.decode()))
+                    #     system_pruned = True
+                except:
+                    logger.log(f'Error: Integrating {project}__{fuzz_target}__{commit_hash}__{date} threw an Exception:')
+                    logger.log(traceback.format_exc())
 
                 # check whether the fuzz_target is successful
-                log_path = os.path.join(SAVE_DIRECTORY, f"{project}__{fuzz_target}__{commit_hash}", "logs")
-                with open(f"{log_path}/out", "r") as f:
-                    lines = f.readlines()
-                    for line in lines:
-                        if "Entering queue cycle 1" in line:
-                            # if the target is successful, add it to successful and remove the fuzz_target
-                            oss_libraries.get(project)[0].remove(fuzz_target)
-                            # if the project now is empty -> remove it from the queue
-                            if not oss_libraries.get(project)[0]:
-                                oss_libraries.pop(project)
-                            with open('successful', 'a') as successful:
-                                successful.write(f"'{project}': ('{fuzz_target}', '{commit_hash}', '{date}'), \n\n")
-                            save_leftover_libs_counter('integrate_test_commits_libs.py', oss_libraries, current_counter)
-                            continue
+                try:
+                    log_path = os.path.join(SAVE_DIRECTORY, f"{project}__{fuzz_target}__{date}", "logs")
+                    with open(f"{log_path}/out", "r") as f:
+                        lines = f.readlines()
+                        for line in lines:
+                            if "Entering queue cycle 1" in line:
+                                # if the target is successful, add it to successful and remove the fuzz_target
+                                oss_libraries.get(project)[0].remove(fuzz_target)
+                                logger.log(f'{project}: {fuzz_target} was successful\n')
+                                # if the project now is empty -> remove it from the queue
+                                if not oss_libraries.get(project)[0]:
+                                    oss_libraries.pop(project)
+                                    logger.log(f'The whole project {project} was successful\n')
+                                with open('successful', 'a') as successful:
+                                    successful.write(f"'{project}': ('{fuzz_target}', '{commit_hash}', '{date}'), \n\n")
+                                save_leftover_libs_counter('integrate_test_commits_libs.py', oss_libraries, current_counter)
+                except:
+                    logger.log(f'Error: Checking whether the integration was successful threw an Exception:')
+                    logger.log(traceback.format_exc())
 
         # save all left libraries and the current counter (in case of crash)
         current_counter += 1
-        save_leftover_libs_counter('integrate_test_commits_libs.py', oss_libraries, current_counter)
-
+        try:
+            save_leftover_libs_counter('integrate_test_commits_libs.py', oss_libraries, current_counter)
+        except:
+            logger.log(f'Error: Could not save leftover libs:')
+            logger.log(traceback.format_exc())
     logger.log("------------------------------------------ Finished ------------------------------------------")
     logger.log(f"Exception counter: {exception_counter}")
     logger.log(f"Timeout counter: {timeout_counter}")
@@ -172,5 +193,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     print("Starting the experiment ...")
-    x = main()
+    x = test_commits()
     exit(x)

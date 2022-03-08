@@ -11,5 +11,5 @@ x = {'ghostscript': [(['gstoraster_fuzzer'], 'ed1c6e38', '2020-12-04T07:30:03-08
                     (['gstoraster_fuzzer'], '9b715c91', '2019-06-27T09:59:20-07:00'),
                     (['gstoraster_fuzzer'], 'cd848bbd', '2020-03-27T13:32:10-07:00')],}
 
-runner.run_experiment('ghostscript', 'gstoraster_erfuzz', '2020-03-27T13:32:10-07:00', 'cd848bbd')
+runner.run_experiment('ghostscript', 'gstoraster_fuzzer', '2020-03-27T13:32:10-07:00', 'cd848bbd')
 

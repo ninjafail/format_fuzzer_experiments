@@ -7,7 +7,7 @@ while [ $x -lt 1 ]
 do
   (( i++ ))
   echo "$i"
-  python3 integrate_all_commits.py
+  python3 integrate_test_commits.py
   x=$?
   echo $x
   systemctl stop docker
