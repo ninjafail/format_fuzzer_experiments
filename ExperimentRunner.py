@@ -17,7 +17,7 @@ class Logger(object):
     def log(self, obj: object) -> None:
         """Logs a message to the specified save directory and optionally prints debug statements.
 
-        :param obj: the content/message to be logged
+        :param obj: the object/message to be logged
         :return: None
         """
         if self.debug:
@@ -140,8 +140,7 @@ class ExpRunner(object):
                        f"-p {project} " \
                        f"-f {fuzz_target} " \
                        f"-d {date} " \
-                       f"-c {commit_hash} && " \
-                       f"make test-run-afl-{project}_{fuzz_target}"
+                       f"-c {commit_hash}"
                 self.run(cmd, out=out, err=err, timeout=timeout)
             except Exception as e:
                 self.logger.log(f'\nERROR: Couldn\'t integrate experiment: {project} \n{e}')
@@ -150,7 +149,7 @@ class ExpRunner(object):
             # test the experiment
             try:
                 cmd = f'make test-run-afl-{project}_{fuzz_target}'
-                self.run(cmd, out, err)
+                self.run(cmd, out=out, err=err, timeout=timeout)
             except TimeoutError as e:
                 self.logger.log(f'\nNormal Timeout: {project} : {e}')
             except Exception as e:
@@ -183,7 +182,7 @@ class ExpRunner(object):
 
         return successful
 
-    def get_one_commit(self, counter: int, project: str, fuzz_targets: List[str] = None) -> Tuple[List[str], str, str]:
+    def get_one_commit(self, project: str, counter: int = 0, fuzz_targets: List[str] = None) -> Tuple[List[str], str, str]:
         """ get fuzz targets, commit and date for one oss-fuzz project
         :param counter: the number of the commit to be taken (0: newest commit, 1: one older, ...)
         :param project: The name of the oss-fuzz project
@@ -194,7 +193,7 @@ class ExpRunner(object):
         """
         # set default of fuzz target
         if fuzz_targets is None:
-            fuzz_targets = [project]
+            fuzz_targets = get_fuzz_targets(os.path.join(self.oss_fuzz_path, project))
 
         # define the path of the project
         project_path = os.path.join(self.oss_fuzz_path, project)
@@ -207,9 +206,9 @@ class ExpRunner(object):
         p = subprocess.run('git --no-pager log --pretty=format:"%h" -- .', shell=True, cwd=project_path,
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         commit_hashes = p.stdout.decode().split()
-        if counter >= len(commit_hashes):
+        if counter not in range(-len(commit_hashes), len(commit_hashes)):
             return [], '', ''
-        commit_hash = commit_hashes[-counter]
+        commit_hash = commit_hashes[counter]
 
         # get all fuzz targets from the available fuzz targets
         subprocess.run(f'git checkout {commit_hash}', shell=True, cwd=project_path,
