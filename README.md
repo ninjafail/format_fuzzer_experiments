@@ -155,7 +155,7 @@ while counter < 20:
     counter += 1
 ```
 
-#### Using other helper functions
+### Using other helper functions
 ```python
 from ExperimentRunner import get_fuzz_targets
 
