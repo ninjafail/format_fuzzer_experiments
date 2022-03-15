@@ -6,7 +6,13 @@ is especially useful, when you want to integrate and run multiple experiments. T
 main functionalities. The initial purpose was to integrate all experiments and examine the seed files. This is why 
 there are many other files. 
 
-Before you can use any of this, you need to clone the [fuzzbench directory](https://github.com/google/fuzzbench) and have docker installed. Also, your user should have the necessary docker permissions. If you want to check whether you installed everything correctly go and follow the instructions of [the fuzzbench documentation on integrating an OSS-Fuzz experiment](https://google.github.io/fuzzbench/developing-fuzzbench/adding-a-new-benchmark/). You can test whether you integrated the experiment correctly by running `make test-run-$FUZZER_NAME-$BENCHMARK_NAME` (e.g. `make test-run-afl-ghostscript_gstoraster_fuzzer`) in the fuzzbench directory with its virtual environment is activated.
+Before you can use any of this, you need to [follow the instructions to get started with fuzzbench](https://google.github.io/fuzzbench/getting-started/prerequisites/)  
+and have docker installed. Also, your user should have the necessary docker permissions. If you want to check whether 
+you installed everything correctly go and follow the instructions of 
+[the fuzzbench documentation on integrating an OSS-Fuzz experiment](https://google.github.io/fuzzbench/developing-fuzzbench/adding-a-new-benchmark/). 
+You can test whether you integrated the experiment correctly by running `make test-run-$FUZZER_NAME-$BENCHMARK_NAME` 
+(e.g. `make test-run-afl-ghostscript_gstoraster_fuzzer`) in the fuzzbench directory with its virtual environment is 
+activated.
 
 
 ### Example
