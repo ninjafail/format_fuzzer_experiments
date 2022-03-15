@@ -1,0 +1,33 @@
+v# err and out sometimes different
+
+in 853/1201 tries:
+#number ERROR: gcr.io/fuzzbench/builders/afl/project_fuzz_target:latest: not found
+
+
+"""
+3
+#4 importing cache manifest from gcr.io/fuzzbench/builders/afl/arduinojson_arduinojson-intermediate
+#4 sha256:40dab2a1c1af5d8805272e72633987c3b98fc8932507e673645c117dae090497
+#4 ERROR: gcr.io/fuzzbench/builders/afl/arduinojson_arduinojson-intermediate:latest: not found
+--> ERROR:root:Fuzz target binary not found.
+INFO:root:Doing final sync.
+ERROR:root:Call to <function get_stats at 0x7f4195bd6f70> failed. Extras: {'traceback': 'Traceback (most recent call last):\n  File "/src/experiment/runner.py", line 374, in record_stats\n    stats_json_str = fuzzer_module_get_stats(output_corpus,\n  File "/src/fuzzers/afl/fuzzer.py", line 51, in get_stats\n    with open(stats_file) as file_handle:\nFileNotFoundError: [Errno 2] No such file or directory: \'/out/corpus/fuzzer_stats\'\n'}
+
+#17 39.64 From https://github.com/apache/arrow-testing
+#17 39.64  * branch            0beeda3a0b9dc28cf18b6bb09f706e5caa5160d1 -> FETCH_HEAD
+#17 42.31 From https://github.com/apache/parquet-testing
+#17 42.31  * branch            8f2a069ed2c58787e5be2a3ca8c68bc801b8eafa -> FETCH_HEAD
+#17 42.37 error: pathspec '84faf557' did not match any file(s) known to git
+
+
+----------------------------------------
+
+#5 ERROR: gcr.io/fuzzbench/builders/afl/aspell_aspell:latest: not found
+
+
+
+
+
+
+
+"""

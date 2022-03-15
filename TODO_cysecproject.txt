@@ -3,12 +3,15 @@ Your task here would be to identify appropriate benchmarks and their respective 
 Key question: Which ones have a binary template? 
 Goal: to evaluate Format Fuzzer and compare it to afl
 
-TODO: 
+
+questions:
+- whats with deadline and possible unfinished
+
+TODO:
+- last idea: change the commit of fuzzbench
+- test newly found ones, that have an interesting seed
+
 - re evaluate the experiments, why they failed
-
-
-- add README.md
-- evaluate experiments
 - run experiments
 
 - Automation script:
@@ -19,12 +22,82 @@ TODO:
 	. What about the seeds that have some values prepended or appended?
 	. New templates from https://formats.kaitai.io
 
+##########################################################################################
+######	saved commands
 
-- make run- experiments copy /out directory 
-- run the automation script on different commits (the first one of each new experiment)
+see load:  top/uptime
+see space: df -h
+ncdu
 
 
-PDF experiments:
+### tmux
+- tmux new -s myname
+- detach: strg-b + d
+- tmux attach-session -t exp1
+- keep log files
+    strg-b + :, type in capture-pane -S - + Return
+    strg-b + :, type in save-buffer /home/c01flro/logs/name.txt + return
+
+### Copy files
+scp -R -o 'ProxyJump c01flro@ssh.cispa.de' /home/forian/uni/fuzzbench_format_fuzzer/fuzzers/aflsmartformat c01flro@colossus11.cispa.de:/home/c01flro/fuzzbench/fuzzers/aflsmartformat
+
+### Debug
+make debug-afl-jsc_jsc
+$ROOT_DIR/docker/benchmark-runner/startup-runner.sh
+run the jsc binary
+run the commands by hand to checkout the commit
+
+### docker
+docker container start CONTAINER
+docker exec -it CONTAINER /bin/bash
+docker cp CONTAINER:SRC DEST
+docker system prune -a --volumes
+
+### virtual environment
+source .venv/bin/activate
+
+### FUZZBENCH
+##### get the date
+git --no-pager log -1 master --format=%cd --date=iso-strict
+
+##### integrate oss-fuzz
+PYTHONPATH=. python3 benchmarks/oss_fuzz_benchmark_integration.py -p ghostscript -f gstoraster_fuzzer -c master -d 2021-11-22T20:30:59+00:00
+
+##### run experiment
+PYTHONPATH=. python3 experiment/run_experiment.py \
+-c experiment/test_data/local-exp.yaml \
+-b ghostscript_gstoraster_fuzzer \
+-e oss-fuzz-integration-test2 \
+-f afl
+
+##########################################################################################
+###### final experiments:
+
+    'libldac': (['libldac_encode_fuzzer'], '2022-01-28T17:47:00+00:00', [
+        'RIFF (little-endian) data, WAVE audio, Microsoft PCM, 8 bit, mono 11025 Hz'
+    ]),
+
+PYTHONPATH=. python3 benchmarks/oss_fuzz_benchmark_integration.py -p libldac -f libldac_encode_fuzzer -c c34c308faad86d154b52586ff66de8d77187cafd -d 2022-01-28T17:47:00+00:00
+
+
+    'giflib': ('dgif_target', '2020-07-06T13:18:23-07:00', [
+        'GIF image data, version 89a, 125 x 25'
+    ]),
+
+    'libwebp': (
+        ['fuzz_simple_api',
+         'fuzz_advanced_api',
+         'fuzz_animation_api',
+         'fuzz_demux_api'],
+        '2022-01-21T17:24:29+00:00',
+        ['RIFF (little-endian) data, Web/P image, VP8 encoding, 63x66, Scaling: [none]x[none], YUV color, decoders should clamp'
+         'RIFF (little-endian) data, Web/P image'
+    ]),
+
+
+
+##########################################################################################
+###### PDF experiments:
 23203939fc3032777f4440ccfeb4c8e19e7891d0
 - 'jsc': ('jsc', '2022-01-21T17:24:29+00:00'
 - 'ntp': ('ntp', '2022-01-21T17:24:29+00:00'
@@ -61,53 +134,8 @@ PYTHONPATH=. python3 benchmarks/oss_fuzz_benchmark_integration.py  \
 PYTHONPATH=. python3 experiment/run_experiment.py --experiment-config /home/forian/uni/fuzzbench_aflsmartformat/experiment/test_data/local-experiment-config.yaml --benchmarks ghostscript_gstoraster_fuzzer --experiment-name ghostscript-afl-aflsmartformat --fuzzers afl aflsmartformat -a
 
 
-
 ##########################################################################################
-######	saved commands
-
-see load:  top/uptime
-see space: df -h
-
-TMUX
-- tmux new -s myname
-- detach: strg-b + d
-- tmux attach-session -t exp1
-- keep log files
-    strg-b + :, type in capture-pane -S - + Return
-    strg-b + :, type in save-buffer /home/c01flro/logs/name.txt + return
-
-
-scp -R -o 'ProxyJump c01flro@ssh.cispa.de' /home/forian/uni/fuzzbench_format_fuzzer/fuzzers/aflsmartformat c01flro@colossus11.cispa.de:/home/c01flro/fuzzbench/fuzzers/aflsmartformat
-
-
-make debug-afl-jsc_jsc
-$ROOT_DIR/docker/benchmark-runner/startup-runner.sh 
-run the jsc binary
-run the commands by hand to checkout the commit
-
-
-docker container start CONTAINER
-docker exec -it CONTAINER /bin/bash
-docker cp CONTAINER:SRC DEST 
-docker system prune -a --volumes
-
-source .venv/bin/activate
-
-ncdu
-
-
-
-git --no-pager log -1 master --format=%cd --date=iso-strict
-
-PYTHONPATH=. python3 benchmarks/oss_fuzz_benchmark_integration.py -p ghostscript -f gstoraster_fuzzer -c master -d 2021-11-22T20:30:59+00:00
-
-
-PYTHONPATH=. python3 experiment/run_experiment.py \
--c experiment/test_data/local-exp.yaml \
--b ghostscript_gstoraster_fuzzer \
--e oss-fuzz-integration-test2 \
--f afl
-
+###### already run experiments
 PYTHONPATH=. python3 experiment/run_experiment.py \
 -c experiment/test_data/local-exp.yaml \
 -b ghostscript_gstoraster \
