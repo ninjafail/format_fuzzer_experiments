@@ -154,25 +154,25 @@ def test_commits() -> int:
                     logger.log(f'Error: Integrating {project}__{fuzz_target}__{commit_hash}__{date} threw an Exception:')
                     logger.log(traceback.format_exc())
 
-                # check whether the fuzz_target is successful
+                # check whether the fuzz_target is successful_interesting_libs
                 try:
                     log_path = os.path.join(SAVE_DIRECTORY, f"{project}__{fuzz_target}__{date}", "logs")
                     with open(f"{log_path}/out", "r") as f:
                         lines = f.readlines()
                         for line in lines:
                             if "Entering queue cycle 1" in line:
-                                # if the target is successful, add it to successful and remove the fuzz_target
+                                # if the target is successful_interesting_libs, add it to successful_interesting_libs and remove the fuzz_target
                                 oss_libraries.get(project)[0].remove(fuzz_target)
-                                logger.log(f'{project}: {fuzz_target} was successful\n')
+                                logger.log(f'{project}: {fuzz_target} was successful_interesting_libs\n')
                                 # if the project now is empty -> remove it from the queue
                                 if not oss_libraries.get(project)[0]:
                                     oss_libraries.pop(project)
-                                    logger.log(f'The whole project {project} was successful\n')
-                                with open('successful', 'a') as successful:
+                                    logger.log(f'The whole project {project} was successful_interesting_libs\n')
+                                with open('successful_interesting_libs', 'a') as successful:
                                     successful.write(f"'{project}': ('{fuzz_target}', '{commit_hash}', '{date}'), \n\n")
                                 save_leftover_libs_counter('integrate_test_commits_libs.py', oss_libraries, current_counter)
                 except:
-                    logger.log(f'Error: Checking whether the integration was successful threw an Exception:')
+                    logger.log(f'Error: Checking whether the integration was successful_interesting_libs threw an Exception:')
                     logger.log(traceback.format_exc())
 
         # save all left libraries and the current counter (in case of crash)
