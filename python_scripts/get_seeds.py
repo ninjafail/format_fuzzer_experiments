@@ -99,7 +99,7 @@ def get_fuzzing_exp():
     print("\nIterated through all libs. Writing to files now ... ")
     print("\tWriting all failed libs ... ", end='')
     should_write_fail = True  # TODO
-    with open('../results/oss-fuzz_fail_test', 'a') as f:
+    with open('../results/oss-fuzz_fail_fuzzing', 'a') as f:
         if should_write_fail:
             f.write(f"\n\n\n-----------------------------------------------------{EXPERIMENT_NAME}---------------------------------------------------------\n")
         for lib_name, (fuzz_targets, date) in fail.items():
@@ -112,7 +112,7 @@ def get_fuzzing_exp():
     print("\tWriting all ascii libs ... ", end='')
     ascii = list(set(ascii))
     should_write_ascii = True  # TODO
-    with open('../results/oss-fuzz_ascii_test', 'a') as f:
+    with open('../results/oss-fuzz_ascii_fuzzing', 'a') as f:
         if should_write_ascii:
             f.write(f"\n\n\n-----------------------------------------------------{EXPERIMENT_NAME}---------------------------------------------------------\n")
         for lib_name, fuzz_target, date in ascii:
@@ -126,7 +126,7 @@ def get_fuzzing_exp():
     others.sort()
     others = list(others for others, _ in itertools.groupby(others))
     should_write_others = True  # TODO
-    with open('../results/oss-fuzz_others_test', 'a') as f:
+    with open('../results/oss-fuzz_others_fuzzing', 'a') as f:
         if should_write_others:
             f.write(f"\n\n\n-----------------------------------------------------{EXPERIMENT_NAME}---------------------------------------------------------\n")
         for lib_name, fuzz_target, date, file_types in others:
