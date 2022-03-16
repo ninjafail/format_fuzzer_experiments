@@ -26,14 +26,15 @@ See the simple example:
 # run this inside of the virtual environment of fuzzbench
 import ExperimentRunner as ExpRun
 
-# define the experiment runner, which defines the timeout for trying to integrate the experiment (in seconds), the 
-# path of the fuzzbench directory, and the path where to store the log files for each run experiment
+# define the experiment runner, which defines the timeout for trying to integrate the experiment 
+# (in seconds), the path of the fuzzbench directory, and the path where to store the log files 
+# for each run experiment
 runner = ExpRun.ExpRunner(test_run_timeout=300, 
                           fuzzbench_path='/home/florian/uni/cysec_project/fuzzbench',
                           save_path='/home/florian/experiments')
 
-# integrate and run the experiment "ghostscript" using the fuzz target "gstoraster_fuzzer" at commit "ed1c6e38" which 
-# date is the "2020-12-04T07:30:03-08:00"
+# integrate and run the experiment "ghostscript" using the fuzz target "gstoraster_fuzzer" at 
+# commit "ed1c6e38" which date is the "2020-12-04T07:30:03-08:00"
 runner.run_experiment('ghostscript', 'gstoraster_fuzzer', '2020-12-04T07:30:03-08:00', 'ed1c6e38')
 ```
 
@@ -70,7 +71,8 @@ make test-run-afl-$PROJECT_$FUZZ_TARGET
 runner.run_experiment('ghostscript', 'gstoraster_fuzzer', '2020-12-04T07:30:03-08:00', 'ed1c6e38')
 ```
 ```python
-# run an experiment with a timeout of 10 min and removes all docker containers and images (except the base image)
+# run an experiment with a timeout of 10 min and removes all docker containers and images 
+# (except the base image)
 runner.run_experiment('ghostscript', 'gstoraster_fuzzer', '2020-12-04T07:30:03-08:00', 'ed1c6e38', timeout=600, cleanup=True)
 ```
 
