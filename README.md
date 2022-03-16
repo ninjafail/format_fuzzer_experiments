@@ -159,8 +159,7 @@ while counter < 20:
         fuzz_targets, commit_hash, date = get_one_commit(counter, project, fuzz_targets)
         for fuzz_target in fuzz_targets:
             runner.run_experiment(project, fuzz_target, date, commit_hash)
-            
-    counter += 1
+            counter += 1
 ```
 
 ### Using other helper functions
