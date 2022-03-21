@@ -3,9 +3,7 @@ import os
 import sys
 import integrate_all_libs
 
-sys.path.append('../format_fuzzer_experiments')
-
-from format_fuzzer_experiments.ExperimentRunner import Logger, save_leftover_libs, init_directory, ExpRunner
+from ExperimentRunner import Logger, save_leftover_libs, init_directory, ExpRunner
 
 only_before_date = "2021-8-25T00:00:00"  # TODO: date
 RUN_NAME = "integrate_all_oss_1"
