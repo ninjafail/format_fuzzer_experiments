@@ -1,6 +1,8 @@
 import subprocess
 import os
 import copy
+import dateutil.parser
+import time
 from typing import IO, List, Tuple
 
 
@@ -104,7 +106,7 @@ class ExpRunner(object):
         # remove all build cache
         # p = Popen('echo y | docker builder prune -a')
 
-    def run_experiment(self, project: str, fuzz_target: str, date: str, commit_hash: str, timeout: int = None,
+    def run_experiment(self, project: str, fuzz_target: str, commit_hash: str, date: str, timeout: int = None,
                        cleanup: bool = False) -> bool:
         """Integrates and runs a single oss-fuzz experiment. Uses cleanup() in the end.
 
@@ -124,6 +126,9 @@ class ExpRunner(object):
         project_path = os.path.join(self.save_path, project_name)
         project_logs_path = os.path.join(project_path, "logs")
         project_out_path = os.path.join(project_path, "out")
+
+        self.logger.log(f'running {project_name}')
+        self.logger.log(f'{time.ctime(time.time())}')
 
         # initialize directories
         init_directory(project_path)
@@ -182,11 +187,15 @@ class ExpRunner(object):
 
         return successful
 
-    def get_one_commit(self, project: str, counter: int = 0, fuzz_targets: List[str] = None) -> Tuple[List[str], str, str]:
+    def get_one_commit(self, project: str, counter: int = 0, before: str = None, fuzz_targets: List[str] = None) \
+            -> Tuple[List[str], str, str]:
         """ get fuzz targets, commit and date for one oss-fuzz project
-        :param counter: the number of the commit to be taken (0: newest commit, 1: one older, ...)
         :param project: The name of the oss-fuzz project
-        :param fuzz_targets: The fuzz_targets of the oss-fuzz project
+        :param counter: (Optional) The number of the commit to be taken (0: newest commit, 1: one older, ...). Takes
+        the newest commit by default.
+        :param before: (Optional) Given a date in iso-strict format, this function only returns a commit older than the
+        given date. (iso-strict: <year>-<month>-<day>T<hours>:<minutes>:<seconds>)
+        :param fuzz_targets: (Optional) The fuzz_targets of the oss-fuzz project, which should be returned.
 
         :return: Tuple, consisting of: list of fuzz targets, commit hash, date,
         If counter is bigger than the oldest commit, it returns [], '', ''.
@@ -194,6 +203,14 @@ class ExpRunner(object):
         # set default of fuzz target
         if fuzz_targets is None:
             fuzz_targets = get_fuzz_targets(os.path.join(self.oss_fuzz_path, project))
+        date_before = None
+        if before is not None:
+            try:
+                date_before = dateutil.parser.isoparse(before)
+            except Exception as e:
+                raise AssertionError(f"The date in 'before' needs to be in iso-strict format. Run "
+                                     f"'git --no-pager log -1 commit hash --format=%cd --date=iso-strict' in the git "
+                                     f"repository to get an iso-strict formatted date. \n{e}")
 
         # define the path of the project
         project_path = os.path.join(self.oss_fuzz_path, project)
@@ -224,6 +241,11 @@ class ExpRunner(object):
         p = subprocess.run(f'git --no-pager log -1 {commit_hash} --format=%cd --date=iso-strict', shell=True,
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=project_path)
         date = p.stdout.decode().replace('\n', '')
+
+        # if before was used: check whether the commit is before the chosen date, otherwise return the next counter
+        if date_before is not None:
+            if dateutil.parser.isoparse(date) < date_before:
+                return self.get_one_commit(project, counter + 1, before, fuzz_targets)
 
         return fuzz_targets, commit_hash, date
 

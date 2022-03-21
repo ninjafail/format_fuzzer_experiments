@@ -134,11 +134,11 @@ def test_commits() -> int:
                     logger.log(f'{time.ctime()}')
                     # if the system has been pruned give more time, since the base image needs to be reinstalled
                     if system_pruned:
-                        res = exp_runner.run_experiment(project, fuzz_target, date, commit_hash, cleanup=True,
-                                                        timeout=2 * TEST_RUN_TIMEOUT)
+                        res = exp_runner.run_experiment(project, fuzz_target, commit_hash, date,
+                                                        timeout=2 * TEST_RUN_TIMEOUT, cleanup=True)
                         system_pruned = False
                     else:
-                        res = exp_runner.run_experiment(project, fuzz_target, date, commit_hash, cleanup=True)
+                        res = exp_runner.run_experiment(project, fuzz_target, commit_hash, date, cleanup=True)
 
                     if res:
                         timeout_counter += 1

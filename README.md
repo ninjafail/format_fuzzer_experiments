@@ -22,6 +22,7 @@ Whenever you run this command, you need to first activate the virtual environmen
 source /path/to/fuzzbench/.venv/bin/activate
 ```
 See the simple example:
+
 ```python
 # run this inside of the virtual environment of fuzzbench
 import ExperimentRunner as ExpRun
@@ -29,13 +30,13 @@ import ExperimentRunner as ExpRun
 # define the experiment runner, which defines the timeout for trying to integrate the experiment 
 # (in seconds), the path of the fuzzbench directory, and the path where to store the log files 
 # for each run experiment
-runner = ExpRun.ExpRunner(test_run_timeout=300, 
+runner = ExpRun.ExpRunner(test_run_timeout=300,
                           fuzzbench_path='/home/florian/uni/cysec_project/fuzzbench',
                           save_path='/home/florian/experiments')
 
 # integrate and run the experiment "ghostscript" using the fuzz target "gstoraster_fuzzer" at 
 # commit "ed1c6e38" which date is the "2020-12-04T07:30:03-08:00"
-runner.run_experiment('ghostscript', 'gstoraster_fuzzer', '2020-12-04T07:30:03-08:00', 'ed1c6e38')
+runner.run_experiment('ghostscript', 'gstoraster_fuzzer', 'ed1c6e38', '2020-12-04T07:30:03-08:00')
 ```
 
 ## ExpRunner
@@ -66,14 +67,17 @@ make test-run-afl-$PROJECT_$FUZZ_TARGET
 - `returns`: False, if an exception was thrown or no container was created by the integration scripts. If it is true, this does not necessarily mean that the integration was successful.  
 
 #### Examples:
+
 ```python
 # basic usage
-runner.run_experiment('ghostscript', 'gstoraster_fuzzer', '2020-12-04T07:30:03-08:00', 'ed1c6e38')
+runner.run_experiment('ghostscript', 'gstoraster_fuzzer', 'ed1c6e38', '2020-12-04T07:30:03-08:00')
 ```
+
 ```python
 # run an experiment with a timeout of 10 min and removes all docker containers and images 
 # (except the base image)
-runner.run_experiment('ghostscript', 'gstoraster_fuzzer', '2020-12-04T07:30:03-08:00', 'ed1c6e38', timeout=600, cleanup=True)
+runner.run_experiment('ghostscript', 'gstoraster_fuzzer', 'ed1c6e38', '2020-12-04T07:30:03-08:00', timeout=600,
+                      cleanup=True)
 ```
 
 ### `get_one_commit`
@@ -107,6 +111,7 @@ runner.get_one_commit(project='ghostscript', counter=-1)
 
 ## Further examples
 ### Iterating over multiple experiments
+
 ```python
 import ExperimentRunner as er
 
@@ -117,28 +122,29 @@ runner = er.ExpRunner(test_run_timeout=300,
                       save_path='/home/florian/experiments',
                       logger=logger)
 
-experiments = {'ghostscript': 
+experiments = {'ghostscript':
                    [(['gstoraster_fuzzer'], 'ed1c6e38', '2020-12-04T07:30:03-08:00'),
                     (['gstoraster_fuzzer'], '9b715c91', '2019-06-27T09:59:20-07:00'),
                     (['gstoraster_fuzzer'], 'cd848bbd', '2020-03-27T13:32:10-07:00')],
-               'gnupg': 
-                   [(['fuzz_import', 'fuzz_decrypt', 'fuzz_list', 'fuzz_verify'], 
+               'gnupg':
+                   [(['fuzz_import', 'fuzz_decrypt', 'fuzz_list', 'fuzz_verify'],
                      '13aca530', '2018-05-24T08:58:52-07:00'),
-                    (['fuzz_import', 'fuzz_decrypt', 'fuzz_list', 'fuzz_verify'], 
+                    (['fuzz_import', 'fuzz_decrypt', 'fuzz_list', 'fuzz_verify'],
                      '34a719c9', '2019-05-22T09:09:42-07:00'),
-                    (['fuzz_import', 'fuzz_decrypt', 'fuzz_list', 'fuzz_verify'], 
+                    (['fuzz_import', 'fuzz_decrypt', 'fuzz_list', 'fuzz_verify'],
                      '84faf557', '2020-12-10T09:49:27+11:00')]
-}
+               }
 
 logger.log('Starting the experiment')
 for project, targets in experiments.items():
     for t in targets:
         fuzz_targets, commit_hash, date = t[0], t[1], t[2]
         for fuzz_target in fuzz_targets:
-            runner.run_experiment(project, fuzz_target, date, commit_hash)
+            runner.run_experiment(project, fuzz_target, commit_hash, date)
 ```
 
 ### Iterating over multiple experiments, while getting the necessary information from get_one_commit()
+
 ```python
 import ExperimentRunner as er
 from integrate_test_commits import get_one_commit
@@ -158,7 +164,7 @@ while counter < 20:
     for project, fuzz_targets in experiments.items():
         fuzz_targets, commit_hash, date = get_one_commit(counter, project, fuzz_targets)
         for fuzz_target in fuzz_targets:
-            runner.run_experiment(project, fuzz_target, date, commit_hash)
+            runner.run_experiment(project, fuzz_target, commit_hash, date)
             counter += 1
 ```
 
