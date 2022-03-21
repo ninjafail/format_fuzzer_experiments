@@ -1,10 +1,13 @@
 import copy
 import os
-
+import sys
 import integrate_all_libs
-from ExperimentRunner import Logger, save_leftover_libs, init_directory, ExpRunner
 
-only_before_date = ''  # TODO: some hash before [date]
+sys.path.append('../format_fuzzer_experiments')
+
+from format_fuzzer_experiments.ExperimentRunner import Logger, save_leftover_libs, init_directory, ExpRunner
+
+only_before_date = "2021-8-25T00:00:00"  # TODO: date
 RUN_NAME = "integrate_all_oss_1"
 SAVE_DIRECTORY = f"/home/forian/uni/{RUN_NAME}"
 FUZZBENCH_DIRECTORY = "/home/forian/uni/fuzzbench"
