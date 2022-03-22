@@ -201,6 +201,8 @@ class ExpRunner(object):
         If counter is bigger than the oldest commit, it returns [], '', ''.
         """
         # set default of fuzz target
+        subprocess.run(f'git checkout master', shell=True, cwd=self.oss_fuzz_path,
+                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if fuzz_targets is None:
             fuzz_targets = get_fuzz_targets(os.path.join(self.oss_fuzz_path, project))
         date_before = None
