@@ -5,10 +5,10 @@ import integrate_all_libs
 
 from ExperimentRunner import Logger, save_leftover_libs, init_directory, ExpRunner
 
-only_before_date = "2021-8-25T00:00:00"  # TODO: date
+only_before_date = "2021-08-25T00:00:00+00:00"  # TODO: date
 RUN_NAME = "integrate_all_oss_1"
-SAVE_DIRECTORY = f"/home/forian/uni/{RUN_NAME}"
-FUZZBENCH_DIRECTORY = "/home/forian/uni/fuzzbench"
+SAVE_DIRECTORY = f"/home/florian/uni/{RUN_NAME}"
+FUZZBENCH_DIRECTORY = "/home/florian/fuzzbench"
 TEST_RUN_TIMEOUT = 600              # the time a single experiment has building
 OSS_LIBRARIES = integrate_all_libs.current_libs     # OSS_LIBRARIES to run
 
@@ -26,7 +26,7 @@ def main() -> int:
     n = 0
 
     # start of the main loop
-    for project in oss_libraries:
+    for project in OSS_LIBRARIES:
         fuzz_targets, commit_hash, commit_date = runner.get_one_commit(project=project, before=only_before_date)
         for fuzz_target in fuzz_targets:
             n += 1

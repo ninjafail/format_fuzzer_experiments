@@ -200,11 +200,18 @@ class ExpRunner(object):
         :return: Tuple, consisting of: list of fuzz targets, commit hash, date,
         If counter is bigger than the oldest commit, it returns [], '', ''.
         """
-        # set default of fuzz target
+
+        # checkout to master to get all possible commits
         subprocess.run(f'git checkout master', shell=True, cwd=self.oss_fuzz_path,
                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # define the path of the project
+        project_path = os.path.join(self.oss_fuzz_path, project)
+
+        # set default of fuzz target
         if fuzz_targets is None:
-            fuzz_targets = get_fuzz_targets(os.path.join(self.oss_fuzz_path, project))
+            fuzz_targets = get_fuzz_targets(project_path)
+        # set default of date_before
         date_before = None
         if before is not None:
             try:
@@ -214,24 +221,23 @@ class ExpRunner(object):
                                      f"'git --no-pager log -1 commit hash --format=%cd --date=iso-strict' in the git "
                                      f"repository to get an iso-strict formatted date. \n{e}")
 
-        # define the path of the project
-        project_path = os.path.join(self.oss_fuzz_path, project)
-
-        # checkout to master to get all possible commits
-        subprocess.run(f'git checkout master', shell=True, cwd=project_path,
-                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
         # get all possible commits and choose the right one, depending on counter
         p = subprocess.run('git --no-pager log --pretty=format:"%h" -- .', shell=True, cwd=project_path,
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         commit_hashes = p.stdout.decode().split()
         if counter not in range(-len(commit_hashes), len(commit_hashes)):
+			self.logger.log(f'{project} does not have that many commits.')
             return [], '', ''
         commit_hash = commit_hashes[counter]
 
         # get all fuzz targets from the available fuzz targets
-        subprocess.run(f'git checkout {commit_hash}', shell=True, cwd=project_path,
+        subprocess.run(f'git checkout {commit_hash}', shell=True, cwd=self.oss_fuzz_path,
                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		if not os.path.exists(project_path):
+			self.logger.log(f'{project} did not exist before {date_before}.')
+            return [], '', ''
+
+		# remove all unnecessary fuzz targets
         avail_fuzz_targets = get_fuzz_targets(project_path)
         if not avail_fuzz_targets:
             avail_fuzz_targets = [project]
@@ -246,7 +252,7 @@ class ExpRunner(object):
 
         # if before was used: check whether the commit is before the chosen date, otherwise return the next counter
         if date_before is not None:
-            if dateutil.parser.isoparse(date) < date_before:
+            if not dateutil.parser.isoparse(date) < date_before:
                 return self.get_one_commit(project, counter + 1, before, fuzz_targets)
 
         return fuzz_targets, commit_hash, date
