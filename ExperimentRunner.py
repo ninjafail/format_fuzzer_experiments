@@ -226,18 +226,18 @@ class ExpRunner(object):
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         commit_hashes = p.stdout.decode().split()
         if counter not in range(-len(commit_hashes), len(commit_hashes)):
-			self.logger.log(f'{project} does not have that many commits.')
+            self.logger.log(f'{project} does not have that many commits.')
             return [], '', ''
         commit_hash = commit_hashes[counter]
 
         # get all fuzz targets from the available fuzz targets
         subprocess.run(f'git checkout {commit_hash}', shell=True, cwd=self.oss_fuzz_path,
                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		if not os.path.exists(project_path):
-			self.logger.log(f'{project} did not exist before {date_before}.')
+        if not os.path.exists(project_path):
+            self.logger.log(f'{project} did not exist before {date_before}.')
             return [], '', ''
 
-		# remove all unnecessary fuzz targets
+        # remove all unnecessary fuzz targets
         avail_fuzz_targets = get_fuzz_targets(project_path)
         if not avail_fuzz_targets:
             avail_fuzz_targets = [project]
