@@ -54,6 +54,7 @@ class ExpRunner(object):
         self.fuzzbench_path = fuzzbench_path
         self.oss_fuzz_path = os.path.join(fuzzbench_path, 'third_party/oss-fuzz/projects')
         self.save_path = save_path
+        init_directory(save_path)
         if not logger:
             self.logger = Logger(os.path.join(self.save_path, 'log'), debug=debug)
         else:
@@ -107,14 +108,15 @@ class ExpRunner(object):
         # p = Popen('echo y | docker builder prune -a')
 
     def run_experiment(self, project: str, fuzz_target: str, commit_hash: str, date: str, timeout: int = None,
-                       cleanup: bool = False) -> bool:
+                       fuzzer: str = 'afl', cleanup: bool = False) -> bool:
         """Integrates and runs a single oss-fuzz experiment. Uses cleanup() in the end.
 
         :param project: The name of the OSS-fuzz project
         :param fuzz_target: The fuzz target, use the name of the project, if the project has no fuzz targets
         :param date: The date of the commit, that should be used.
         :param commit_hash: The hash of the oss-fuzz commit, which should be used.
-        :param timeout: the timeout to use instead of self.timeout
+        :param timeout: The timeout to use instead of self.timeout
+        :param fuzzer: The fuzzer to do the test run with.
         :param cleanup: Controls whether docker should be cleaned up in the end. Warning: This removes all containers
         and images, except the base image!
         :return: True if the experiment was probably successful. False otherwise.
@@ -122,7 +124,7 @@ class ExpRunner(object):
         successful = True
 
         # path names
-        project_name = "{}__{}__{}".format(project, fuzz_target, date)
+        project_name = f"{project}__{fuzz_target}__{commit_hash}__{date}"
         project_path = os.path.join(self.save_path, project_name)
         project_logs_path = os.path.join(project_path, "logs")
         project_out_path = os.path.join(project_path, "out")
@@ -164,7 +166,8 @@ class ExpRunner(object):
             # save the docker container on hard disk
             try:
                 # list all containers
-                cmd = 'docker ps -aq'
+                cmd = f'docker ps -a -f "ancestor=gcr.io/fuzzbench/runners/{fuzzer}/{project}_{fuzz_target}" --format' \
+                      f'={{{{.ID}}}} '
                 p1 = self.run(cmd)
                 containers = p1.stdout.decode().split('\n')
                 if not containers:
@@ -172,9 +175,9 @@ class ExpRunner(object):
                 self.logger.log(f'\nAll available containers: {containers}')
 
                 # copy the /out directory on hard disk
-                for c in containers:
-                    c = c.replace('\n', "")
-                    cmd = f'docker cp {c}:/out {project_out_path}/{c}'
+                for container in containers:
+                    self.logger.log(f'\nCopying container {container} to {project_out_path}')
+                    cmd = f'docker cp {container}:/out {project_out_path}'
                     self.run(cmd)
             except TimeoutError as e:
                 self.logger.log(f"\nERROR: Timeout while copying files: {project_name}: \n{e}")
@@ -185,11 +188,13 @@ class ExpRunner(object):
         if cleanup:
             self.cleanup()
 
+        self.logger.log('\n')
         return successful
 
-    def get_one_commit(self, project: str, counter: int = 0, before: str = None, fuzz_targets: List[str] = None) \
+    def get_one_commit(self, project: str, counter: int = None, before: str = None, fuzz_targets: List[str] = None) \
             -> Tuple[List[str], str, str]:
-        """ get fuzz targets, commit and date for one oss-fuzz project
+        """ Given an oss-fuzz project, this function returns all (stated) fuzz targets, the commit hash and the commit
+         date for the newest commit.
         :param project: The name of the oss-fuzz project
         :param counter: (Optional) The number of the commit to be taken (0: newest commit, 1: one older, ...). Takes
         the newest commit by default.
@@ -211,6 +216,11 @@ class ExpRunner(object):
         # set default of fuzz target
         if fuzz_targets is None:
             fuzz_targets = get_fuzz_targets(project_path)
+        # set default for counter
+        default_counter = False
+        if counter is None:
+            default_counter = True
+            counter = 0
         # set default of date_before
         date_before = None
         if before is not None:
@@ -222,13 +232,40 @@ class ExpRunner(object):
                                      f"repository to get an iso-strict formatted date. \n{e}")
 
         # get all possible commits and choose the right one, depending on counter
-        p = subprocess.run('git --no-pager log --pretty=format:"%h" -- .', shell=True, cwd=project_path,
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        commit_hashes = p.stdout.decode().split()
-        if counter not in range(-len(commit_hashes), len(commit_hashes)):
-            self.logger.log(f'{project} does not have that many commits.')
+
+        # get the hash and date for all commits
+        p = subprocess.run('git --no-pager log --pretty=format:"%h %cd" --date=iso-strict .', shell=True,
+                           cwd=project_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        commit_hashes = p.stdout.decode().split('\n')
+        for i, c in enumerate(commit_hashes):
+            commit_hashes[i] = c.split(' ')
+
+        last_date = '0001-01-01T00:00:00+00:00'
+        found_one = False
+        #print(commit_hashes)
+        #print(commit_hashes)
+
+        if not default_counter:
+            if counter not in range(-len(commit_hashes), len(commit_hashes)):
+                self.logger.log(f'{project} does not have that many commits.')
+                return [], '', ''
+            commit_hash = commit_hashes[counter][0]
+            commit_date = commit_hashes[counter][1]
+
+        if date_before is not None:
+            for i, (ch, cd) in enumerate(commit_hashes):
+                parsed_cd = dateutil.parser.isoparse(cd)
+                if dateutil.parser.isoparse(last_date) <= parsed_cd < date_before \
+                        and (default_counter or (parsed_cd <= dateutil.parser.isoparse(commit_hashes[counter][1]))):
+                        # i > counter or (i < 0 and len(commit_hashes)+i > counter)) and counter != 0):
+                    commit_hash = ch
+                    commit_date = cd
+                    last_date = cd
+                    found_one = True
+
+        if not found_one:
+            self.logger.log(f'{project} does not have a commit that is older than {date_before}.')
             return [], '', ''
-        commit_hash = commit_hashes[counter]
 
         # get all fuzz targets from the available fuzz targets
         subprocess.run(f'git checkout {commit_hash}', shell=True, cwd=self.oss_fuzz_path,
@@ -245,17 +282,7 @@ class ExpRunner(object):
             if fuzz_target not in avail_fuzz_targets:
                 fuzz_targets.remove(fuzz_target)
 
-        # get the date
-        p = subprocess.run(f'git --no-pager log -1 {commit_hash} --format=%cd --date=iso-strict', shell=True,
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=project_path)
-        date = p.stdout.decode().replace('\n', '')
-
-        # if before was used: check whether the commit is before the chosen date, otherwise return the next counter
-        if date_before is not None:
-            if not dateutil.parser.isoparse(date) < date_before:
-                return self.get_one_commit(project, counter + 1, before, fuzz_targets)
-
-        return fuzz_targets, commit_hash, date
+        return fuzz_targets, commit_hash, commit_date
 
 
 def save_leftover_libs(save_path: str, libs: dict):

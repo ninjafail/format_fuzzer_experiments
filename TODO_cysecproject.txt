@@ -3,10 +3,6 @@ Your task here would be to identify appropriate benchmarks and their respective 
 Key question: Which ones have a binary template? 
 Goal: to evaluate Format Fuzzer and compare it to afl
 
-
-questions:
-- whats with deadline and possible unfinished
-
 TODO:
 - last idea: change the commit of fuzzbench
 - test newly found ones, that have an interesting seed
