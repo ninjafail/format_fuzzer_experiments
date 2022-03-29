@@ -1,8 +1,7 @@
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import subprocess
-import typing
-import all_libs_commits
+from integrate_all import all_libs_commits
 from ExperimentRunner import get_fuzz_targets
 
 
@@ -149,11 +148,17 @@ def main():
     remove_ascii(all_libs_commits.all_libs, all_libs_commits.ascii)
     experiments = read_commit_libs()
 
-    with open("/home/forian/uni/format_fuzzer_experiments/python_scripts/all_libs_2022-01-28.py", "a") as f:
+    with open("/integrate_all/all_libs_2022-01-28.py", "a") as f:
         #f.write("all_libs = {\n")
         for k, v in experiments.items():
             print(f"'{k}': {v},")
             #f.write(f"\t'{k}': {v},\n")
         #f.write('}\n')
 
-main()
+# main()
+x = read_all_libraries('43873069112a742fe9cdf8c0955098c1539aea7a')
+print('{')
+for k,v in x.items():
+    print(f"'{k}': {v},")
+print('}')
+# Aug 19, 2021

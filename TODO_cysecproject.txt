@@ -7,10 +7,8 @@ TODO:
 - last idea: change the commit of fuzzbench
 - test newly found ones, that have an interesting seed
 
-- re evaluate the experiments, why they failed
-- run experiments
-
 - run aflsplusplus instead of afl
+-> didn't work, but changing the fuzzer is now supported
 
 
 - follow these suggestions: "The script should create the benchmark directory in benchmarks/$PROJECT_$FUZZ_TARGET (unless you specify the name manually) with all the files needed to build the benchmark. You should remove unnecessary files such as fuzz targets which are not used for the benchmark. The *.options files are usually unused, thus it is recommended to remove them along with the commands that copy them to $SRC or $OUT. Further, the build.sh file may also need to be modified accordingly, so as to build only the required fuzz target."
