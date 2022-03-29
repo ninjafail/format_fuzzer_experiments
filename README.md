@@ -76,8 +76,8 @@ runner.run_experiment('ghostscript', 'gstoraster_fuzzer', 'ed1c6e38', '2020-12-0
 ```python
 # run an experiment with a timeout of 10 min and removes all docker containers and images 
 # (except the base image)
-runner.run_experiment('ghostscript', 'gstoraster_fuzzer', 'ed1c6e38', '2020-12-04T07:30:03-08:00', timeout=600,
-                      cleanup=True)
+runner.run_experiment('ghostscript', 'gstoraster_fuzzer', 'ed1c6e38', '2020-12-04T07:30:03-08:00', 
+                      timeout=600, cleanup=True)
 ```
 
 ### `get_one_commit`
